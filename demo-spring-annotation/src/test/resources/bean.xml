@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+	<!-- 注册bean -->
+	<bean id="person" class="com.io.bean.base.Person" scope="prototype" init-method="getAge" destroy-method="getAge">
+		<property name="name" value="guo"/>
+		<property name="age" value="12"/>
+	</bean>
+	<!-- 配置包扫描 -->
+	<context:component-scan base-package="com.io" use-default-filters="false">
+		<context:include-filter type="aspectj" expression="null"/>
+		<context:exclude-filter type="aspectj" expression="null"/>
+	</context:component-scan>
+
+	<!-- 向Spring容器注册：
+	AutowiredAnnotationBeanPostProcessor、
+	CommonAnnotationBeanPostProcessor、
+	PersistenceAnnotationBeanPostProcessor、
+	RequiredAnnotationBeanPostProcessor这4个BeanPostProcessor。
+	 -->
+	<context:annotation-config/>
+
+	<!-- 外部配置文件 -->
+	<context:property-placeholder location="valueInfo.properties"/>
+
+	<!-- 开启基于注解版的切片动态代理 -->
+	<aop:aspectj-autoproxy/>
+
+	<!-- 开启基于注解的声明式事务 -->
+</beans>

@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+}
+
+group 'org.springframework'
+version '5.1.12.BUILD-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // spring上下文环境
+    compile(project(":spring-context"))
+    // Java规范注解
+    compile group: 'javax.inject', name: 'javax.inject', version: '1'
+    // 包含：configuration-processor和autoconfigure-processor
+    compile group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: '2.1.4.RELEASE'
+    // 数据库连接池
+    compile group: 'c3p0', name: 'c3p0', version: '0.9.1.2'
+    // 单元测试
+    testCompile('junit:junit:4.13')
+    // AOP
+    compile(project(":spring-aspects"))
+}
