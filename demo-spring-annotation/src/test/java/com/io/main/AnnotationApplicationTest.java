@@ -4,6 +4,7 @@ import com.io.bean.aop.MathCalculator;
 import com.io.bean.autowired.AutowiredService;
 import com.io.bean.base.Person;
 import com.io.bean.circulardependency.IndexDao;
+import com.io.bean.circulardependency.IndexService;
 import com.io.bean.value.ValueInfo;
 import com.io.config.*;
 import org.junit.Test;
@@ -26,7 +27,7 @@ public class AnnotationApplicationTest {
 	// Bean是spring bean，Java对象是普通new的对象，Bean一定是Java对象，但是Java对象不一定是Bean。
 	// Class=>BeanDefinition=>Object(Bean)
 	// 扫描=>解析=>调用扩展=>遍历map解析=>new
-	// BeanPostProcessor & BeanFactoryPostProcessor
+	// BeanPostProcessor & BeanFactoryPostProcessor 均是后置处理器
 	// GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
 
 	// 01、给容器中注册组件：包扫描+组件标注注解(@Bean+包扫描+包含/排除规则)
@@ -130,10 +131,10 @@ public class AnnotationApplicationTest {
 	// indexService 对象=>注入indexDao=>getBean(indexDao)，从容器中，拿不到，第三个缓存中拿，new indexDao
 	@Test
 	public void getCircularDependency() {
-		ApplicationContext ioc = createIoc(CircularDependencyConfig.class);
+		ApplicationContext ioc = new AnnotationConfigApplicationContext(CircularDependencyConfig.class);
 		printAllBeansName(ioc);
 		// ioc.getBean(IndexService.class);
-		ioc.getBean(IndexDao.class);
+		// ioc.getBean(IndexDao.class);
 	}
 
 	// 怎么关闭循环依赖？（修改源码；初始化指定；扩展spring）

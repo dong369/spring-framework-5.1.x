@@ -534,28 +534,37 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	public void refresh() throws BeansException, IllegalStateException {
 		synchronized (this.startupShutdownMonitor) {
 			// Prepare this context for refreshing.（准备此上下文以进行刷新。）
+			// 准备工作包括：设置启动时间、是否激活标识位、初始化属性配置
 			prepareRefresh();
 
 			// Tell the subclass to refresh the internal bean factory.（告诉子类刷新内部bean工厂。）
+			// 返回一个factory，为什么需要返回一个工厂？因为要对工程进行初始化！！！
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.（准备在这种情况下使用的bean工厂。）
+			// 准备工厂
 			prepareBeanFactory(beanFactory);
 
 			try {
 				// Allows post-processing of the bean factory in context subclasses.（允许在上下文子类中对bean工厂进行后处理。）
+				// 这个方法在当前版本的spring中没有任何代码，可能是spring期待后面的版本进行扩展
 				postProcessBeanFactory(beanFactory);
 
 				// ※Invoke factory processors registered as beans in the context.（完成所谓的包扫描，向beanDefinitionNames的map中添加bean）
+				// 完成所谓的包扫描
+				// 在spring环境中去执行已经注册的factory processors
+				// 设置执行自定义的ProcessBeanFactory和spring内部自己定义的
 				invokeBeanFactoryPostProcessors(beanFactory);
 
 				// ※ Register bean processors that intercept bean creation.（所有BeanPostProcessor初始化的调用点）
+				// 注册BeanPostProcessors
 				registerBeanPostProcessors(beanFactory);
 
 				// Initialize message source for this context.（为此上下文初始化消息源。）
 				initMessageSource();
 
 				// Initialize event multicaster for this context.（为此上下文初始化事件多播器。）
+				// 初始化应用事件广播器
 				initApplicationEventMulticaster();
 
 				// Initialize other special beans in specific context subclasses.（在特定上下文子类中初始化其他特殊bean。）
@@ -565,6 +574,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				registerListeners();
 
 				// ※Instantiate all remaining (non-lazy-init) singletons.（spring开始实例化所有单例非懒加载Bean的调用点）
+				// 完成Bean工厂初始化
 				finishBeanFactoryInitialization(beanFactory);
 
 				// Last step: publish corresponding event.（最后一步：发布相应的事件。）
@@ -719,6 +729,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * <p>Must be called before singleton instantiation.
 	 */
 	protected void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
+		// 完成扫描
 		PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(beanFactory, getBeanFactoryPostProcessors());
 
 		// Detect a LoadTimeWeaver and prepare for weaving, if found in the meantime
@@ -891,7 +902,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		beanFactory.freezeConfiguration();
 
 		// Instantiate all remaining (non-lazy-init) singletons.
-		// 实例化所有剩余的（非延迟初始化）单例。
+		// 实例化所有剩余的（非延迟初始化）单例，实例化单例。
 		beanFactory.preInstantiateSingletons();
 	}
 

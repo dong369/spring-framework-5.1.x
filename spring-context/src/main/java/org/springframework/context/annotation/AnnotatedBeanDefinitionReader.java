@@ -237,9 +237,12 @@ public class AnnotatedBeanDefinitionReader {
 		AnnotationConfigUtils.processCommonDefinitionAnnotations(abd);
 		if (qualifiers != null) {
 			for (Class<? extends Annotation> qualifier : qualifiers) {
+				// 如果配置了@Primary注解，作为首选
 				if (Primary.class == qualifier) {
 					abd.setPrimary(true);
-				} else if (Lazy.class == qualifier) {
+				}
+				// 懒加载
+				else if (Lazy.class == qualifier) {
 					abd.setLazyInit(true);
 				} else {
 					abd.addQualifier(new AutowireCandidateQualifier(qualifier));
@@ -250,8 +253,11 @@ public class AnnotatedBeanDefinitionReader {
 			customizer.customize(abd);
 		}
 
+		// BeanDefinitionHolder也是一个数据结构
 		BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(abd, beanName);
+		//
 		definitionHolder = AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, this.registry);
+		//
 		BeanDefinitionReaderUtils.registerBeanDefinition(definitionHolder, this.registry);
 	}
 

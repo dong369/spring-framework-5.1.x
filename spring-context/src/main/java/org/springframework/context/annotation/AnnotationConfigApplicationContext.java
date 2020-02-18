@@ -63,6 +63,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * through {@link #register} calls and then manually {@linkplain #refresh refreshed}.
 	 */
 	public AnnotationConfigApplicationContext() {
+		// 同时会调用父类的无参构造器：this.beanFactory = new DefaultListableBeanFactory();
 		this.reader = new AnnotatedBeanDefinitionReader(this);
 		this.scanner = new ClassPathBeanDefinitionScanner(this);
 	}
@@ -90,6 +91,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 		this();
 		// 关闭循环依赖的设置：setAllowCircularReferences(false);
 		// 注册配置类，因为配置需要解析，一般不需要自己扫描
+		// this.beanDefinitionMap.put(beanName, beanDefinition);
 		register(componentClasses);
 		// 启动刷新容器
 		refresh();

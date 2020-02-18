@@ -202,6 +202,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	protected Object getSingleton(String beanName, boolean allowEarlyReference) {
 		// 一级缓存：从spring[单例池]中获取，所谓通常所说的ioc容器，存的是Bean
 		Object singletonObject = this.singletonObjects.get(beanName);
+		// 单例池中为空同时对象正在创建过程中进入if
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
 			synchronized (this.singletonObjects) {
 				// 三级缓存中获取，存的是对象
@@ -369,6 +370,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * @see #isSingletonCurrentlyInCreation
 	 */
 	protected void beforeSingletonCreation(String beanName) {
+		// 添加对象到当前正在创建的单例集合中
 		if (!this.inCreationCheckExclusions.contains(beanName) && !this.singletonsCurrentlyInCreation.add(beanName)) {
 			throw new BeanCurrentlyInCreationException(beanName);
 		}

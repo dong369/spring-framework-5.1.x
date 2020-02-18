@@ -564,6 +564,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			}
 			// 第四次调用后置处理器，判断是否需要AOP，提前暴露对象
 			// 为什么要提前暴露对象？
+			// 添加到二级缓存中
 			addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean));
 		}
 

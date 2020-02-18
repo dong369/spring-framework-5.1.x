@@ -1,5 +1,7 @@
 package com.io;
 
+import org.junit.Test;
+
 /**
  * Project -
  *
@@ -9,4 +11,8 @@ package com.io;
  * @since JDK1.8
  */
 public class Main {
+	@Test
+	public void test() {
+		System.out.println("test");
+	}
 }
