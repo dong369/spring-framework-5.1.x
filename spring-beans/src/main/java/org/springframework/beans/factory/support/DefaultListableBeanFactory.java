@@ -809,6 +809,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		// 遍历一个副本以允许使用init方法，这些方法依次注册新的bean定义。
 		// While this may not be part of the regular factory bootstrap, it does otherwise work fine.
 		// 尽管这可能不是常规工厂引导程序的一部分，但可以正常运行。
+		// 所有bean的名称，可能需要实例化的类（lazy & scope）
 		List<String> beanNames = new ArrayList<>(this.beanDefinitionNames);
 
 		// Trigger initialization of all non-lazy singleton beans...

@@ -264,7 +264,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			// We're assumably within a circular reference.
 			// 我们大概在循环参考之内。
 
-			// 判断这个类是不是在创建过程中
+			// 原型
+			// 如果是原型不应该在初始化时创建
 			if (isPrototypeCurrentlyInCreation(beanName)) {
 				throw new BeanCurrentlyInCreationException(beanName);
 			}
@@ -290,6 +291,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			}
 
 			if (!typeCheckOnly) {
+				// 添加到alreadyCreated集合中，表示已经创建过一次
 				markBeanAsCreated(beanName);
 			}
 

@@ -3,8 +3,6 @@ package com.io.main;
 import com.io.bean.aop.MathCalculator;
 import com.io.bean.autowired.AutowiredService;
 import com.io.bean.base.Person;
-import com.io.bean.circulardependency.IndexDao;
-import com.io.bean.circulardependency.IndexService;
 import com.io.bean.value.ValueInfo;
 import com.io.config.*;
 import org.junit.Test;
@@ -22,9 +20,10 @@ import org.springframework.core.env.Environment;
  * @since JDK1.8
  */
 public class AnnotationApplicationTest {
-	// IOC、AOP、循环依赖(自动注入)、后置处理器、Aware回调
-	// spring容器：spring容器组件的组合，并不是我们理解的单例池（BeanDefinition、BeanFactory、三个缓存对象、后置处理器）
 	// Bean是spring bean，Java对象是普通new的对象，Bean一定是Java对象，但是Java对象不一定是Bean。
+	// 实例化是对象到bean的整个过程；初始化是对象new出来后做的事情
+	// IOC、AOP、循环依赖(自动注入)、后置处理器、Aware回调
+	// spring容器：spring容器组件的组合，并不是我们理解的单例池（BeanDefinition、BeanFactoryPostProcessor、BeanFactory、beanDefinitionMap、三个缓存对象、后置处理器）
 	// Class=>BeanDefinition=>Object(Bean)
 	// 扫描=>解析=>调用扩展=>遍历map解析=>new
 	// BeanPostProcessor & BeanFactoryPostProcessor 均是后置处理器
@@ -101,7 +100,7 @@ public class AnnotationApplicationTest {
 	// 07、cycle生命周期（实例化（Instantiation） -> 属性赋值(Populate) -> 初始化(Initialization) -> 销毁(Destruction)）
 	@Test
 	public void getCycle() {
-		AnnotationConfigApplicationContext ioc = (AnnotationConfigApplicationContext) createIoc(CycleConfig.class);
+		AnnotationConfigApplicationContext ioc = new AnnotationConfigApplicationContext(CycleConfig.class);
 		ioc.close();
 	}
 

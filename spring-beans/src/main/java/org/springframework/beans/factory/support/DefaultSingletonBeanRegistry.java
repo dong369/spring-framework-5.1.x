@@ -60,6 +60,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements SingletonBeanRegistry {
 	/**
 	 * 一级缓存：spring的单例池
+	 * 由于存放完全初始化好的bean，从该缓存中获取的对象可以直接使用
 	 * <p>
 	 * 单例对象的高速缓存：bean名称到bean实例，spring单例池，也就是通常所说的容器。
 	 * Cache of singleton objects: bean name to bean instance.
@@ -68,6 +69,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 
 	/**
 	 * 二级缓存：工厂缓存，为了产出[工厂对象]
+	 * 存放bean工厂对象，解决循环依赖
 	 * <p>
 	 * 单例工厂的缓存：Bean名称为ObjectFactory。
 	 * Cache of singleton factories: bean name to ObjectFactory.
@@ -76,6 +78,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 
 	/**
 	 * 三级缓存：避免重复创建对象
+	 * 存放原始的bean对象用于解决循环依赖，
 	 * <p>
 	 * 早期单例对象的高速缓存：Bean名称到Bean实例。
 	 * Cache of early singleton objects: bean name to bean instance.
@@ -247,6 +250,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					logger.debug("Creating shared instance of singleton bean '" + beanName + "'");
 				}
 				// 添加正在创建的对象
+				// 表示beanName对应的bean正在创建
 				beforeSingletonCreation(beanName);
 				boolean newSingleton = false;
 				boolean recordSuppressedExceptions = (this.suppressedExceptions == null);
@@ -254,6 +258,9 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					this.suppressedExceptions = new LinkedHashSet<>();
 				}
 				try {
+					// 这里singletonFactory.getObject()才会正在创建对象
+					// 创建对象但是创建出来的是代理对象
+					// 先创建出原对象，再创建代理对象
 					singletonObject = singletonFactory.getObject();
 					newSingleton = true;
 				} catch (IllegalStateException ex) {

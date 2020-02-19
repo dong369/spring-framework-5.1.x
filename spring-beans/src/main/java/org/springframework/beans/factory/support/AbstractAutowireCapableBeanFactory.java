@@ -24,6 +24,7 @@ import org.springframework.core.*;
 import org.springframework.lang.Nullable;
 import org.springframework.util.*;
 
+import javax.annotation.Resource;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -463,6 +464,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		// Prepare method overrides.
+		// 处理lookup-method 和 replace-method 配置，
 		try {
 			mbdToUse.prepareMethodOverrides();
 		} catch (BeanDefinitionValidationException ex) {
@@ -472,6 +474,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		try {
 			// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
+			// 九个地方运用了后置处理器，执行了五个后置处理器
 			// 第一次调用后置处理器，给BeanPostProcessors一个返回代理而不是目标bean实例的机会。
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
 			if (bean != null) {
@@ -525,6 +528,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 		if (instanceWrapper == null) {
 			// 01、第二次调用后置通知，实例化[对象]阶段，对象的[构造器会执行]
+			// createBeanInstance中包含三种创建对象的方式
+			// 通过工厂创建、通过构造方法自动注入、通过无参构造器
 			instanceWrapper = createBeanInstance(beanName, mbd, args);
 		}
 		final Object bean = instanceWrapper.getWrappedInstance();
@@ -573,7 +578,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		try {
 			// 02、第五、六次后置处理器的调用，完成[属性赋值]阶段，也就是通常说的[自动注入]
 			populateBean(beanName, mbd, instanceWrapper);
-			// 03、第七、八次后置处理器的调用，初始化spring阶段
+			// 03、第七、八次后置处理器的调用，初始化spring阶段，AOP就是在这个地方完成的
 			exposedObject = initializeBean(beanName, exposedObject, mbd);
 		} catch (Throwable ex) {
 			if (ex instanceof BeanCreationException && beanName.equals(((BeanCreationException) ex).getBeanName())) {
@@ -1067,6 +1072,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		Object bean = null;
 		if (!Boolean.FALSE.equals(mbd.beforeInstantiationResolved)) {
 			// Make sure bean class is actually resolved at this point.
+			// 判断是否注册过InstantiationAwareBeanPostProcessors类型的bean
 			if (!mbd.isSynthetic() && hasInstantiationAwareBeanPostProcessors()) {
 				Class<?> targetType = determineTargetType(beanName, mbd);
 				if (targetType != null) {
@@ -1098,6 +1104,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		for (BeanPostProcessor bp : getBeanPostProcessors()) {
 			if (bp instanceof InstantiationAwareBeanPostProcessor) {
 				InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
+				// 实例化是对象到bean的整个过程；初始化是对象new出来后做的事情
+				// postProcessBeforeInstantiation(实例化之前的后期处理) & postProcessBeforeInitialization(初始化前的后期处理)
 				Object result = ibp.postProcessBeforeInstantiation(beanClass, beanName);
 				if (result != null) {
 					return result;
@@ -1383,7 +1391,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			for (BeanPostProcessor bp : getBeanPostProcessors()) {
 				if (bp instanceof InstantiationAwareBeanPostProcessor) {
 					InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
-					// 通过AutowiredAnnotationBeanPostProcessor后置处理器完成属性注入
+					// 通过AutowiredAnnotationBeanPostProcessor后置处理器完成属性注入@Autowired
+					// 通过CommonAnnotationBeanPostProcessor后置处理器完成属性注入@Resource
 					PropertyValues pvsToUse = ibp.postProcessProperties(pvs, bw.getWrappedInstance(), beanName);
 					if (pvsToUse == null) {
 						if (filteredPds == null) {
