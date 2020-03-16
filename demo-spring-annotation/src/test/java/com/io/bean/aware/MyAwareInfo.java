@@ -17,7 +17,7 @@ import org.springframework.util.StringValueResolver;
  * @since JDK1.8
  */
 @Component
-public class AwareInfo implements ApplicationContextAware, BeanNameAware, EmbeddedValueResolverAware {
+public class MyAwareInfo implements ApplicationContextAware, BeanNameAware, EmbeddedValueResolverAware {
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		System.out.println("传入的ioc：" + applicationContext);

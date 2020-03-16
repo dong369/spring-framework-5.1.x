@@ -64,7 +64,9 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 */
 	public AnnotationConfigApplicationContext() {
 		// 同时会调用父类的无参构造器：this.beanFactory = new DefaultListableBeanFactory();
+		// 创建BeanDefinition读取器：spring内部BeanDefinition的注册（主要是后置处理器），完成开天辟地的基础五个bean（主要是后置处理器）
 		this.reader = new AnnotatedBeanDefinitionReader(this);
+		// 创建BeanDefinition扫描器：
 		this.scanner = new ClassPathBeanDefinitionScanner(this);
 	}
 
@@ -87,10 +89,10 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 *                         {@link Configuration @Configuration} classes
 	 */
 	public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
-		// 调用无参构造器
+		// 调用无参构造器，同时会调用父类的无参构造器
 		this();
 		// 关闭循环依赖的设置：setAllowCircularReferences(false);
-		// 注册配置类，因为配置需要解析，一般不需要自己扫描
+		// 注册配置类（们），因为配置需要解析，一般不需要自己扫描
 		// this.beanDefinitionMap.put(beanName, beanDefinition);
 		register(componentClasses);
 		// 启动刷新容器

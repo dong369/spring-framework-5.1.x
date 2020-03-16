@@ -20,9 +20,9 @@ import org.springframework.core.env.Environment;
  * @since JDK1.8
  */
 public class AnnotationApplicationTest {
-	// Bean是spring bean，Java对象是普通new的对象，Bean一定是Java对象，但是Java对象不一定是Bean。
+	// Java对象是普通new的对象，Bean是spring bean，Bean一定是Java对象，但是Java对象不一定是Bean。
 	// 实例化是对象到bean的整个过程；初始化是对象new出来后做的事情
-	// IOC、AOP、循环依赖(自动注入)、后置处理器、Aware回调
+	// IOC、AOP、循环依赖(自动注入)、BeanPostProcessor后置处理器、Aware回调
 	// spring容器：spring容器组件的组合，并不是我们理解的单例池（BeanDefinition、BeanFactoryPostProcessor、BeanFactory、beanDefinitionMap、三个缓存对象、后置处理器）
 	// Class=>BeanDefinition=>Object(Bean)
 	// 扫描=>解析=>调用扩展=>遍历map解析=>new
@@ -82,6 +82,7 @@ public class AnnotationApplicationTest {
 	public void getImport() {
 		ApplicationContext ioc = createIoc(ImportConfig.class);
 		printAllBeansName(ioc);
+
 		System.out.println("=====@Import导入bean=====");
 	}
 
