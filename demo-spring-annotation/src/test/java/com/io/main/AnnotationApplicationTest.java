@@ -23,7 +23,7 @@ public class AnnotationApplicationTest {
 	// Java对象是普通new的对象，Bean是spring bean，Bean一定是Java对象，但是Java对象不一定是Bean。
 	// 实例化是对象到bean的整个过程；初始化是对象new出来后做的事情
 	// IOC、AOP、循环依赖(自动注入)、BeanPostProcessor后置处理器、Aware回调
-	// spring容器：spring容器组件的组合，并不是我们理解的单例池（BeanDefinition、BeanFactoryPostProcessor、BeanFactory、beanDefinitionMap、三个缓存对象、后置处理器）
+	// spring容器：是spring容器组件的组合，并不是我们理解的单例池（BeanDefinition、BeanFactoryPostProcessor、BeanFactory、beanDefinitionMap、三个缓存对象、后置处理器）
 	// Class=>BeanDefinition=>Object(Bean)
 	// 扫描=>解析=>调用扩展=>遍历map解析=>new
 	// BeanPostProcessor & BeanFactoryPostProcessor 均是后置处理器
@@ -33,7 +33,7 @@ public class AnnotationApplicationTest {
 	@Test
 	public void getCreateBean() {
 		ApplicationContext ioc = new AnnotationConfigApplicationContext(BeanConfig.class);
-		// ioc.getBean从spring单例池获取
+		// ioc.getBean(Person.class)从spring单例池获取
 		System.out.println(ioc.getBean(Person.class));
 		printBeansName(ioc, Person.class);
 		printAllBeansName(ioc);
@@ -44,6 +44,7 @@ public class AnnotationApplicationTest {
 	public void getInstantiation() {
 		ApplicationContext ioc = createIoc(InstanceConfig.class);
 		System.out.println("=====实例化（单实例/多实例）=====");
+		// ioc.getBean("instanceInfo")从spring单例池中获取
 		Object instanceInfo01 = ioc.getBean("instanceInfo");
 		Object instanceInfo02 = ioc.getBean("instanceInfo");
 		System.out.println(instanceInfo01 == instanceInfo02);
