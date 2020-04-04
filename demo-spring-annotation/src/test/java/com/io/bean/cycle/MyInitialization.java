@@ -13,14 +13,14 @@ import org.springframework.stereotype.Component;
  * @since JDK1.8
  */
 @Component
-public class Initialization implements InitializingBean, DisposableBean {
+public class MyInitialization implements InitializingBean, DisposableBean {
 	@Override
-	public void destroy() throws Exception {
+	public void destroy() {
 		System.out.println("Initialization...destroy");
 	}
 
 	@Override
-	public void afterPropertiesSet() throws Exception {
+	public void afterPropertiesSet() {
 		System.out.println("Initialization...afterPropertiesSet");
 	}
 }

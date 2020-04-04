@@ -17,6 +17,7 @@ import org.springframework.beans.factory.support.GenericBeanDefinition;
 public class MyBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
 	@Override
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+		// BeanFactoryPostProcessor只能修改beanDefinitionMap中的信息，不能添加
 		GenericBeanDefinition indexDao = (GenericBeanDefinition) beanFactory.getBeanDefinition("indexDao");
 		indexDao.setBeanClass(IndexService.class);
 	}

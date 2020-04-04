@@ -12,7 +12,7 @@ import org.springframework.beans.factory.FactoryBean;
  */
 public class MyFactoryBean implements FactoryBean<FactoryInfo> {
 	@Override
-	public FactoryInfo getObject() throws Exception {
+	public FactoryInfo getObject() {
 		return new FactoryInfo();
 	}
 

@@ -50,8 +50,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Documented
-// Java8中的可重复注解
-@Repeatable(ComponentScans.class)
+@Repeatable(ComponentScans.class) // Java8中的可重复注解
 public @interface ComponentScan {
 
 	/**

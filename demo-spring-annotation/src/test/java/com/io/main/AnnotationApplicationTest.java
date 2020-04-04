@@ -5,7 +5,9 @@ import com.io.bean.autowired.AutowiredService;
 import com.io.bean.base.Person;
 import com.io.bean.value.ValueInfo;
 import com.io.config.*;
+import com.io.mybatis.UserDaoI;
 import org.junit.Test;
+import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -26,7 +28,8 @@ public class AnnotationApplicationTest {
 	// spring容器：是spring容器组件的组合，并不是我们理解的单例池（BeanDefinition、BeanFactoryPostProcessor、BeanFactory、beanDefinitionMap、三个缓存对象、后置处理器）
 	// Class=>BeanDefinition=>Object(Bean)
 	// 扫描=>解析=>调用扩展=>遍历map解析=>new
-	// BeanPostProcessor & BeanFactoryPostProcessor 均是后置处理器
+	// BeanPostProcessor & BeanFactoryPostProcessor 均是后置处理器，都是Spring初始化bean时对外暴露的扩展点。
+	// Aware在大多数情况下，我们应该避免使用任何Aware接口，除非我们需要它们。实现这些接口会将代码耦合到Spring框架
 	// GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
 
 	// 01、给容器中注册组件：包扫描+组件标注注解(@Bean+包扫描+包含/排除规则)
@@ -83,7 +86,6 @@ public class AnnotationApplicationTest {
 	public void getImport() {
 		ApplicationContext ioc = createIoc(ImportConfig.class);
 		printAllBeansName(ioc);
-
 		System.out.println("=====@Import导入bean=====");
 	}
 
@@ -100,6 +102,7 @@ public class AnnotationApplicationTest {
 	}
 
 	// 07、cycle生命周期（实例化（Instantiation） -> 属性赋值(Populate) -> 初始化(Initialization) -> 销毁(Destruction)）
+	// BeanPostProcessor的执行顺序是在BeanFactoryPostProcessor之后
 	@Test
 	public void getCycle() {
 		AnnotationConfigApplicationContext ioc = new AnnotationConfigApplicationContext(CycleConfig.class);
@@ -193,6 +196,26 @@ public class AnnotationApplicationTest {
 	// 16、扩展（BeanFactoryPostProcessor和BeanDefinitionRegistryPostProcessor）
 
 	// 17、扩展事件（ApplicationListener）
+
+	// 18、mybatis整合
+	// SqlSessionFactoryBean
+	// 加入mybatis、spring
+	// 原理是通过JDK动态代理为mapper产出代理对象
+	// 自己产出的对象如何交给spring管理（@Bean）
+	// spring如何把一个类变成bean
+	@Test
+	public void mybatis() {
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MybatisConfig.class);
+		printAllBeansName(context);
+		// UserDaoI接口并不能产生对象
+		UserDaoI bean = context.getBean(UserDaoI.class);
+		System.out.println(bean.getUser());
+		SqlSessionFactoryBean sqlSessionFactoryBean;
+	}
+
+	// 19、hibernate整合
+	// SessionFactory & 声明式事务
+	// 加入hibernate、spring
 
 	/**
 	 * 创建IOC容器

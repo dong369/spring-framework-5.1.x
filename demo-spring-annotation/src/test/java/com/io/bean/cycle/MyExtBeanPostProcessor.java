@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  * @since JDK1.8
  */
 @Component
-public class ExtBeanPostProcessor implements ApplicationContextAware {
+public class MyExtBeanPostProcessor implements ApplicationContextAware {
 	private ApplicationContext applicationContext;
 
 	@Override

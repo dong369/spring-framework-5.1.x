@@ -15,12 +15,12 @@ import org.springframework.context.annotation.FilterType;
  * @date 日期:2019/1/3 时间:14:50
  * @since JDK1.8
  */
-// 配置类==xml配置文件
-@Configuration   // 告诉spring这是一个配置类
-@ComponentScan(value = {"com.io"},
+@Configuration   // 告诉spring这是一个配置类，配置类==xml配置文件。
+@ComponentScan(value = {"com.io"},  // 配置包扫描，spring boot默认扫描@SpringBootApplication主类的同级包和子包。
 		useDefaultFilters = false,
-		// 排除指定的
+		// 排除指定类
 		// excludeFilters = {@ComponentScan.Filter(type = FilterType.ANNOTATION, classes = {Controller.class})},
+		// 包含指定类
 		includeFilters = {
 				// @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = {Repository.class}),
 				// @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {UserService.class})
