@@ -15,7 +15,6 @@ import java.util.Objects;
  * @since JDK1.8
  */
 public class Linux implements Condition {
-
 	@Override
 	public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
 		return Objects.requireNonNull(context.getEnvironment().getProperty("os.name")).contains("Linux");

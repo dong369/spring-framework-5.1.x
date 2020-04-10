@@ -11,7 +11,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringValueResolver;
 
 /**
- * Project -
+ * Aware接口是一个标记接口，表示所有实现该接口的类是会被Spring容器选中，并得到某种通知。
+ * 所有该接口的子接口提供固定的接收通知的方法。这样的接口有很多
  *
  * @author guodd
  * @version 1.0

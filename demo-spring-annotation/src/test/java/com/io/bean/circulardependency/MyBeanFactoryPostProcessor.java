@@ -6,7 +6,8 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 
 /**
- * Project -
+ * 扩展点的功能是：让应用程序在Spring创建Bean对象前修改BeanDefinition
+ * Bean属性配置的类型转换，占位符替换。
  *
  * @author guodd
  * @version 1.0

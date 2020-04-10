@@ -198,7 +198,7 @@ public class AnnotationApplicationTest {
 	// 17、扩展事件（ApplicationListener）
 
 	// 18、mybatis整合
-	// SqlSessionFactoryBean
+	// SqlSessionFactoryBean & MapperFactoryBean
 	// 加入mybatis、spring
 	// 原理是通过JDK动态代理为mapper产出代理对象
 	// 自己产出的对象如何交给spring管理（@Bean）

@@ -3,7 +3,7 @@ package com.io.bean.factory;
 import org.springframework.beans.factory.FactoryBean;
 
 /**
- * Project -
+ * 实现接口FactoryBean来定制实例化逻辑
  *
  * @author guodd
  * @version 1.0
