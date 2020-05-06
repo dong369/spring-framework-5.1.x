@@ -1,6 +1,6 @@
 package com.io.config;
 
-import com.io.bean.base.Person;
+import com.io.bean.bean.Person;
 import com.io.bean.condition.conditional.Linux;
 import com.io.bean.condition.conditional.Windows;
 import com.io.service.UserService;
@@ -13,11 +13,8 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Project -
- *
  * @author guodd
  * @version 1.0
- * @date 日期:2019/1/3 时间:14:50
  * @since JDK1.8
  */
 @Configuration

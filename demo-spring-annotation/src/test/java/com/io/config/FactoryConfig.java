@@ -1,6 +1,6 @@
 package com.io.config;
 
-import com.io.bean.factory.MyFactoryBean;
+import com.io.bean.factory.factorybean.MyFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

@@ -1,7 +1,6 @@
 package com.io.bean.circulardependency;
 
 import com.io.mybatis.MyMapperFactoryBean;
-import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
@@ -13,7 +12,6 @@ import org.springframework.core.type.AnnotationMetadata;
  *
  * @author guodd
  * @version 1.0
- * @date 2020/4/4
  * @since 1.8
  */
 public class MyImportBeanDefinitionRegistrar implements ImportBeanDefinitionRegistrar {

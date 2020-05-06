@@ -4,11 +4,16 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.BeanNameAware;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.EmbeddedValueResolverAware;
+import org.springframework.context.*;
+import org.springframework.core.env.Environment;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringValueResolver;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
 
 /**
  * Aware接口是一个标记接口，表示所有实现该接口的类是会被Spring容器选中，并得到某种通知。
@@ -22,13 +27,51 @@ import org.springframework.util.StringValueResolver;
  */
 @Component
 public class MyAwareInfo implements
-		BeanNameAware, // 获取容器中 Bean 的名称
-		BeanFactoryAware, // 获取当前 BeanFactory ，这样可以调用容器的服务
-		ApplicationContextAware, // 同上在BeanFactory和ApplicationContext的区别中已明确说明
-		EmbeddedValueResolverAware {
+		ApplicationContextAware, // Bean被初始化后，会被注入到ApplicationContext，能获取Application Context调用容器的服务
+		BeanFactoryAware, // 获取当前BeanFactory，能获取Bean Factory调用容器的服务
+		ResourceLoaderAware, // 获取资源加载器，以获取外部资源文件
+		EmbeddedValueResolverAware, // 读取配置文件内容
+		EnvironmentAware, // 能获取当前容器的环境属性信息
+		MessageSourceAware, // 	能获取国际化文本信息,Message Source的相关文本信息
+		BeanNameAware, // 获取容器中Bean的名称
+		ApplicationEventPublisherAware // 应用事件发布器，可以用来发布事件
+{
+
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		System.out.println("传入的ioc：" + applicationContext);
+		BeanFactory beanFactory = applicationContext.getAutowireCapableBeanFactory();
+		System.out.println("ApplicationContextAware传入的ioc：" + Arrays.toString(applicationContext.getBeanDefinitionNames()));
+	}
+
+	@Override
+	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+		System.out.println("BeanFactoryAware：" + beanFactory.getBean(MyAwareInfo.class));
+	}
+
+	@Override
+	public void setResourceLoader(ResourceLoader resourceLoader) {
+		Resource resource = resourceLoader.getResource("classpath:db.properties");
+		try {
+			InputStream inputStream = resource.getInputStream();
+			System.out.println("ResourceLoaderAware：" + inputStream.read());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void setEmbeddedValueResolver(StringValueResolver resolver) {
+		System.out.println("EmbeddedValueResolverAware解析字符串：" + resolver.resolveStringValue("你好，${os.name}，#{20*12}"));
+	}
+
+	@Override
+	public void setEnvironment(Environment environment) {
+		System.out.println(environment.getProperty("os.name"));
+	}
+
+	@Override
+	public void setMessageSource(MessageSource messageSource) {
+		System.out.println("setMessageSource=>" + messageSource);
 	}
 
 	@Override
@@ -37,12 +80,6 @@ public class MyAwareInfo implements
 	}
 
 	@Override
-	public void setEmbeddedValueResolver(StringValueResolver resolver) {
-		System.out.println("解析字符串：" + resolver.resolveStringValue("你好，${os.name}，#{20*12}"));
-	}
-
-	@Override
-	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-		System.out.println(beanFactory);
+	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
 	}
 }

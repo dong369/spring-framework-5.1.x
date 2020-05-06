@@ -1,6 +1,6 @@
 package com.io.config;
 
-import com.io.bean.base.Person;
+import com.io.bean.bean.Person;
 import com.io.bean.condition.MyTypeFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -8,14 +8,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 
 /**
- * Project -
- *
  * @author guodd
  * @version 1.0
- * @date 日期:2019/1/3 时间:14:50
  * @since JDK1.8
  */
-@Configuration   // 告诉spring这是一个配置类，配置类==xml配置文件。
+@Configuration   // 告诉spring这是一个配置类，配置类==bean.xml配置文件
 @ComponentScan(value = {"com.io"},  // 配置包扫描，spring boot默认扫描@SpringBootApplication主类的同级包和子包。
 		useDefaultFilters = false,
 		// 排除指定类

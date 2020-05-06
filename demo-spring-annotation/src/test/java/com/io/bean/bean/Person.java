@@ -1,4 +1,4 @@
-package com.io.bean.base;
+package com.io.bean.bean;
 
 /**
  * Project -

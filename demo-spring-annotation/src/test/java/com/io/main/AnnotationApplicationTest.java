@@ -2,7 +2,7 @@ package com.io.main;
 
 import com.io.bean.aop.MathCalculator;
 import com.io.bean.autowired.AutowiredService;
-import com.io.bean.base.Person;
+import com.io.bean.bean.Person;
 import com.io.bean.value.ValueInfo;
 import com.io.config.*;
 import com.io.mybatis.UserDaoI;
@@ -14,25 +14,30 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.core.env.Environment;
 
 /**
- * Project -
+ * Spring使命：解决企业级应用开发的复杂性，即简化Java开发。
+ * Spring目标：提供一个一站式轻量级应用开发平台。
+ * Spring理念：实现解耦。
+ * Spring核心：DI、IOC、AOP、MVC。
+ * Java对象是普通new的对象，Bean是经过spring的生命周期的spring bean，Bean一定是Java对象，但是Java对象不一定是Bean。
+ * 实例化是对象到bean的整个过程；初始化是对象new出来后做的事情
+ * IOC、AOP、循环依赖(自动注入)、BeanPostProcessor后置处理器、Aware回调
+ * spring容器：是spring容器组件的组合，并不是我们理解的单例池，
+ * （ApplicationContext、BeanDefinition、BeanFactoryPostProcessor、BeanFactory、beanDefinitionMap、三个缓存对象、后置处理器）
+ * 一般使用ApplicationContext，其不但包含了BeanFactory的作用，同时还进行更多的扩展。
+ * Class=>BeanDefinition=>Object(Bean)
+ * 扫描=>解析=>调用扩展=>遍历map解析=>new
+ * BeanPostProcessor & BeanFactoryPostProcessor 均是后置处理器，都是Spring初始化bean时对外暴露的扩展点。
+ * Aware在大多数情况下，我们应该避免使用任何Aware接口，除非我们需要它们。实现这些接口会将代码耦合到Spring框架
+ * GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
  *
  * @author guodd
  * @version 1.0
- * @date 日期:2019/1/3 时间:14:50
  * @since JDK1.8
  */
 public class AnnotationApplicationTest {
-	// Java对象是普通new的对象，Bean是spring bean，Bean一定是Java对象，但是Java对象不一定是Bean。
-	// 实例化是对象到bean的整个过程；初始化是对象new出来后做的事情
-	// IOC、AOP、循环依赖(自动注入)、BeanPostProcessor后置处理器、Aware回调
-	// spring容器：是spring容器组件的组合，并不是我们理解的单例池（BeanDefinition、BeanFactoryPostProcessor、BeanFactory、beanDefinitionMap、三个缓存对象、后置处理器）
-	// Class=>BeanDefinition=>Object(Bean)
-	// 扫描=>解析=>调用扩展=>遍历map解析=>new
-	// BeanPostProcessor & BeanFactoryPostProcessor 均是后置处理器，都是Spring初始化bean时对外暴露的扩展点。
-	// Aware在大多数情况下，我们应该避免使用任何Aware接口，除非我们需要它们。实现这些接口会将代码耦合到Spring框架
-	// GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
-
-	// 01、给容器中注册组件：包扫描+组件标注注解(@Bean+包扫描+包含/排除规则)
+	/**
+	 * 01、给容器中注册组件：包扫描+组件标注注解(@Bean+包扫描+包含/排除规则)
+	 */
 	@Test
 	public void getCreateBean() {
 		ApplicationContext ioc = new AnnotationConfigApplicationContext(BeanConfig.class);
@@ -42,7 +47,9 @@ public class AnnotationApplicationTest {
 		printAllBeansName(ioc);
 	}
 
-	// 02、单实例/多实例
+	/**
+	 * 02、单实例/多实例
+	 */
 	@Test
 	public void getInstantiation() {
 		ApplicationContext ioc = createIoc(InstanceConfig.class);
@@ -53,7 +60,9 @@ public class AnnotationApplicationTest {
 		System.out.println(instanceInfo01 == instanceInfo02);
 	}
 
-	// 03、懒加载（单实例bean/多实例bean）
+	/**
+	 * 03、懒加载（单实例bean/多实例bean）
+	 */
 	@Test
 	public void getLazy() {
 		ApplicationContext ioc = createIoc(LazyConfig.class);
@@ -67,9 +76,11 @@ public class AnnotationApplicationTest {
 		System.out.println(lazyInfoPrototype01 == lazyInfoPrototype02);
 	}
 
-	// 04、给容器中注册组件：@Conditional条件注入，按照一定的条件进行判断，满足条件的才会注册bean
-	// -Dos.name=linux  系统参数
-	// -X 虚拟机参数
+	/**
+	 * 04、给容器中注册组件：@Conditional条件注入，按照一定的条件进行判断，满足条件的才会注册bean
+	 * -Dos.name=linux  系统参数
+	 * -X 虚拟机参数
+	 */
 	@Test
 	public void getCondition() {
 		ApplicationContext ioc = createIoc(ConditionConfig.class);
@@ -81,7 +92,11 @@ public class AnnotationApplicationTest {
 		System.out.println(os);
 	}
 
-	// 05、给容器中注册组件：@Import导入bean(简化导入，快速的向容器中导入组件)
+	/**
+	 * 05、给容器中注册组件：@Import导入bean(简化导入，快速的向容器中导入组件)
+	 * {@link org.springframework.context.annotation.Import}
+	 * {@link org.springframework.context.annotation.ImportSelector}
+	 */
 	@Test
 	public void getImport() {
 		ApplicationContext ioc = createIoc(ImportConfig.class);
@@ -89,27 +104,44 @@ public class AnnotationApplicationTest {
 		System.out.println("=====@Import导入bean=====");
 	}
 
-	// 06、给容器中注册组件：factoryBean
+	/**
+	 * 06、FactoryBean给容器中注册组件：{@link org.springframework.beans.factory.FactoryBean}、{@link org.springframework.beans.factory.BeanFactory}
+	 */
 	@Test
 	public void getFactoryBean() {
 		ApplicationContext ioc = createIoc(FactoryConfig.class);
 		printAllBeansName(ioc);
 		System.out.println("=====给容器中注册组件：FactoryBean=====");
-		// 获取工厂bean获取的是getObject创建的对象
+		// 默认获取工厂bean获取的是getObject创建的对象
 		System.out.println(ioc.getBean("myFactoryBean").getClass());
 		// 获取工厂Bean本身，我们需要给id前面加一个&
 		System.out.println(ioc.getBean("&myFactoryBean").getClass());
 	}
 
-	// 07、cycle生命周期（实例化（Instantiation） -> 属性赋值(Populate) -> 初始化(Initialization) -> 销毁(Destruction)）
-	// BeanPostProcessor的执行顺序是在BeanFactoryPostProcessor之后
+	/**
+	 * 07、Bean的cycle生命周期（实例化，创建对象（Instantiation） -> 属性赋值(Populate) -> 初始化(Initialization) -> 销毁(Destruction)）
+	 * 我们可以自定义初始化方法、销毁方法，容器在bean进行当前生命周期时来调用我们自定义的方法
+	 * 构造方法（创建对象）单实例对象在容器启动时创建对象；多实例对象每次获取时创建对象
+	 * 初始化，对象创建完成，并且赋值好，调用初始化方法
+	 * 销毁，单实例对象关闭容器时销毁；多实例对象容器不会调用销毁方法
+	 * <p>
+	 * 方式一、@{@link org.springframework.context.annotation.Bean}
+	 * 方式二、{@link org.springframework.beans.factory.InitializingBean}、{@link org.springframework.beans.factory.DisposableBean}
+	 * 方式三、{@link javax.annotation.PostConstruct}、{@link javax.annotation.PreDestroy}
+	 * 方式四、{@link org.springframework.beans.factory.config.BeanPostProcessor}
+	 * <p>
+	 * BeanPostProcessor的执行顺序是在BeanFactoryPostProcessor之后
+	 */
 	@Test
 	public void getCycle() {
 		AnnotationConfigApplicationContext ioc = new AnnotationConfigApplicationContext(CycleConfig.class);
+		System.out.println("=====容器关闭====");
 		ioc.close();
 	}
 
-	// 08、属性赋值
+	/**
+	 * 08、属性赋值
+	 */
 	@Test
 	public void getPopulate() {
 		ApplicationContext ioc = createIoc(PropertyValueConfig.class);
@@ -119,7 +151,12 @@ public class AnnotationApplicationTest {
 		System.out.println(bean);
 	}
 
-	// 09、自动装备，自动注入
+	/**
+	 * 09、自动装备，自动注入
+	 * 方式一、{@link org.springframework.beans.factory.annotation.Autowired}
+	 * 方式二、{@link javax.annotation.Resource}，JSR250Java规范
+	 * 方式三、{@link javax.inject.Inject}，JSR330Java规范
+	 */
 	@Test
 	public void getAutowired() {
 		ApplicationContext ioc = createIoc(AutowiredConfig.class);
@@ -127,12 +164,14 @@ public class AnnotationApplicationTest {
 		bean.getAutowiredDao();
 	}
 
-	// 10、spring循环依赖
-	// spring是如何解决循环依赖的问题的？（spring中默认单例是执行循环依赖的）
-	// 怎么证明？
-	// 细节源码是？
-	// indexDao 对象=>注入indexService=>getBean(indexService)，从容器中，拿不到，第三个缓存中拿，new indexService
-	// indexService 对象=>注入indexDao=>getBean(indexDao)，从容器中，拿不到，第三个缓存中拿，new indexDao
+	/**
+	 * 10、spring循环依赖
+	 * spring是如何解决循环依赖的问题的？（spring中默认单例是执行循环依赖的）
+	 * 怎么证明？
+	 * 细节源码是？
+	 * indexDao 对象=>注入indexService=>getBean(indexService)，从容器中，拿不到，第三个缓存中拿，new indexService
+	 * indexService 对象=>注入indexDao=>getBean(indexDao)，从容器中，拿不到，第三个缓存中拿，new indexDao
+	 */
 	@Test
 	public void getCircularDependency() {
 		ApplicationContext ioc = new AnnotationConfigApplicationContext(CircularDependencyConfig.class);
@@ -141,7 +180,9 @@ public class AnnotationApplicationTest {
 		// ioc.getBean(IndexDao.class);
 	}
 
-	// 怎么关闭循环依赖？（修改源码；初始化指定；扩展spring）
+	/**
+	 * 怎么关闭循环依赖？（修改源码；初始化指定；扩展spring）
+	 */
 	@Test
 	public void getCircularDependencyClose() {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
@@ -152,21 +193,28 @@ public class AnnotationApplicationTest {
 		context.refresh();
 	}
 
-	// 11、回调函数
+	/**
+	 * 11、回调函数，Bean中直接对容器进行操作，这时候，就可以通过特定的 Aware 接口来完成。
+	 * Spring提供Aware接口能让Bean感知Spring容器的存在，即让Bean可以使用Spring容器所提供的资源。
+	 */
 	@Test
 	public void getAware() {
 		ApplicationContext ioc = createIoc(AwareConfig.class);
 		printAllBeansName(ioc);
 	}
 
-	// 12、后置处理器
+	/**
+	 * 12、后置处理器
+	 */
 	@Test
 	public void getBeanPostProcessor() {
 
 	}
 
-	// 13、动态的激活和指定环境
-	// -Dspring.profiles.active=test
+	/**
+	 * 13、动态的激活和指定环境
+	 * -Dspring.profiles.active=test
+	 */
 	@Test
 	public void getProfile() {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();

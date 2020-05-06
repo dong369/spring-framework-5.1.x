@@ -3,11 +3,8 @@ package com.io.bean.value;
 import org.springframework.beans.factory.annotation.Value;
 
 /**
- * Project -
- *
  * @author guodd
  * @version 1.0
- * @date 日期:2019/1/3 时间:14:50
  * @since JDK1.8
  */
 public class ValueInfo {
@@ -22,9 +19,9 @@ public class ValueInfo {
 
 	@Value(value = "张三")
 	private String name;
-	@Value("#{20 - 2}")
+	@Value(value = "#{20 - 2}")
 	private Integer age;
-	@Value("${nickname}")
+	@Value(value = "${nickname}")
 	private String nickname;
 
 	public ValueInfo() {
@@ -57,9 +54,9 @@ public class ValueInfo {
 	@Override
 	public String toString() {
 		return "ValueInfo{" +
-				"name='" + name + '\'' +
-				", age=" + age +
-				", nickname='" + nickname + '\'' +
-				'}';
+			   "name='" + name + '\'' +
+			   ", age=" + age +
+			   ", nickname='" + nickname + '\'' +
+			   '}';
 	}
 }

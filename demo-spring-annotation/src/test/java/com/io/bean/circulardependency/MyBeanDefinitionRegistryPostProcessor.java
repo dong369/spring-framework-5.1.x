@@ -11,7 +11,6 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProce
  *
  * @author guodd
  * @version 1.0
- * @date 2020/4/5
  * @since 1.8
  */
 public class MyBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor {
