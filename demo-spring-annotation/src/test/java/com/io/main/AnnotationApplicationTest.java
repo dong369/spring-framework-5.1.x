@@ -3,15 +3,20 @@ package com.io.main;
 import com.io.bean.aop.MathCalculator;
 import com.io.bean.autowired.AutowiredService;
 import com.io.bean.bean.Person;
+import com.io.bean.circulardependency.IndexDao;
+import com.io.bean.circulardependency.IndexService;
 import com.io.bean.value.ValueInfo;
 import com.io.config.*;
 import com.io.mybatis.UserDaoI;
+import org.apache.logging.log4j.core.util.FileUtils;
 import org.junit.Test;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.env.Environment;
+
+import java.io.File;
 
 /**
  * Spring使命：解决企业级应用开发的复杂性，即简化Java开发。
@@ -40,6 +45,7 @@ public class AnnotationApplicationTest {
 	 */
 	@Test
 	public void getCreateBean() {
+		// 实例化spring容器
 		ApplicationContext ioc = new AnnotationConfigApplicationContext(BeanConfig.class);
 		// ioc.getBean(Person.class)从spring单例池获取
 		System.out.println(ioc.getBean(Person.class));
@@ -166,9 +172,10 @@ public class AnnotationApplicationTest {
 
 	/**
 	 * 10、spring循环依赖
-	 * spring是如何解决循环依赖的问题的？（spring中默认单例是执行循环依赖的）
-	 * 怎么证明？
-	 * 细节源码是？
+	 * 如何解决循环依赖的问题的？（spring中默认[单例]是执行循环依赖的）
+	 * 怎么证明？（通过debug的形式）
+	 * 细节源码是？（关闭依赖注入）
+	 * 依赖注入是哪一步完成的？（初始化过程中完成的）
 	 * indexDao 对象=>注入indexService=>getBean(indexService)，从容器中，拿不到，第三个缓存中拿，new indexService
 	 * indexService 对象=>注入indexDao=>getBean(indexDao)，从容器中，拿不到，第三个缓存中拿，new indexDao
 	 */
@@ -176,8 +183,8 @@ public class AnnotationApplicationTest {
 	public void getCircularDependency() {
 		ApplicationContext ioc = new AnnotationConfigApplicationContext(CircularDependencyConfig.class);
 		printAllBeansName(ioc);
-		// ioc.getBean(IndexService.class);
-		// ioc.getBean(IndexDao.class);
+		IndexService indexService = ioc.getBean(IndexService.class);
+		System.out.println(indexService.getIndexDao() == ioc.getBean(IndexDao.class));
 	}
 
 	/**
@@ -300,6 +307,9 @@ public class AnnotationApplicationTest {
 	public void printBeansName(ApplicationContext context, Class<?> clazz) {
 		System.out.println("======打印IOC中指定类型的Bean名称======");
 		for (String bean : context.getBeanNamesForType(clazz)) {
+			String fileExtension = FileUtils.getFileExtension(new File(""));
+			String substring = fileExtension.substring(1, 12);
+			System.out.println(substring);
 			System.out.println(bean);
 		}
 	}

@@ -17,7 +17,8 @@
 		<context:exclude-filter type="aspectj" expression="null"/>
 	</context:component-scan>
 
-	<!-- 向Spring容器注册：
+	<!--
+	向Spring容器注册：
 	AutowiredAnnotationBeanPostProcessor、
 	CommonAnnotationBeanPostProcessor、
 	PersistenceAnnotationBeanPostProcessor、
