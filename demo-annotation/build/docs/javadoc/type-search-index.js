@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"BeanConfig","h":"","u":""},{"l":"MainTest","h":"","u":""},{"l":"所有类","h":"","u":"allclasses-index.html"}]

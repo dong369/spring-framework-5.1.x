@@ -8,15 +8,12 @@ import com.io.bean.circulardependency.IndexService;
 import com.io.bean.value.ValueInfo;
 import com.io.config.*;
 import com.io.mybatis.UserDaoI;
-import org.apache.logging.log4j.core.util.FileUtils;
 import org.junit.Test;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.env.Environment;
-
-import java.io.File;
 
 /**
  * Spring使命：解决企业级应用开发的复杂性，即简化Java开发。
@@ -307,9 +304,6 @@ public class AnnotationApplicationTest {
 	public void printBeansName(ApplicationContext context, Class<?> clazz) {
 		System.out.println("======打印IOC中指定类型的Bean名称======");
 		for (String bean : context.getBeanNamesForType(clazz)) {
-			String fileExtension = FileUtils.getFileExtension(new File(""));
-			String substring = fileExtension.substring(1, 12);
-			System.out.println(substring);
 			System.out.println(bean);
 		}
 	}

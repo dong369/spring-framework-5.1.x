@@ -8,7 +8,7 @@ package com.io;
  * @since JDK1.8
  */
 public class Main {
-	public void test() {
-		System.out.println("test");
+	public static void main(String[] args) {
+		System.out.println("java");
 	}
 }

@@ -24,7 +24,7 @@ import org.springframework.core.*;
 import org.springframework.lang.Nullable;
 import org.springframework.util.*;
 
-import javax.annotation.Resource;
+//import javax.annotation.Resource;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

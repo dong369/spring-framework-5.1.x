@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Implementation-Title: demo-annotation
+Implementation-Version: 5.1.12.BUILD-SNAPSHOT
+Automatic-Module-Name: demo.annotation
+Created-By: 11 (Oracle Corporation)
+
