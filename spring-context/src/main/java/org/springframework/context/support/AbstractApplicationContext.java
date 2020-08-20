@@ -554,6 +554,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				// 完成所谓的包扫描
 				// 在spring环境中去执行已经注册的factory processors
 				// 设置执行自定义的ProcessBeanFactory和spring内部自己定义的
+				// debug查看beanDefinitionMap的变化
 				invokeBeanFactoryPostProcessors(beanFactory);
 
 				// ※ Register bean processors that intercept bean creation.（所有BeanPostProcessor初始化的调用点）
@@ -575,6 +576,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 				// ※Instantiate all remaining (non-lazy-init) singletons.（spring开始实例化所有单例非懒加载Bean的调用点）
 				// 完成Bean工厂初始化
+				// debug查看是否打印构造器信息
 				finishBeanFactoryInitialization(beanFactory);
 
 				// Last step: publish corresponding event.（最后一步：发布相应的事件。）

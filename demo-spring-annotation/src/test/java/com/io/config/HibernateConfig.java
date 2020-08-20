@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
  *
  * @author guodd
  * @version 1.0
- * @date 2020/4/4
  * @since 1.8
  */
 @Configuration

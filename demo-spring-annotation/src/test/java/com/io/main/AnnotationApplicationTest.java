@@ -20,14 +20,14 @@ import org.springframework.core.env.Environment;
  * Spring目标：提供一个一站式轻量级应用开发平台。
  * Spring理念：实现解耦。
  * Spring核心：DI、IOC、AOP、MVC。
- * Java对象是普通new的对象，Bean是经过spring的生命周期的spring bean，Bean一定是Java对象，但是Java对象不一定是Bean。
- * 实例化是对象到bean的整个过程；初始化是对象new出来后做的事情
+ * [Java对象]是普通new的对象，[Spring Bean]是经过spring的生命周期的spring bean，Bean一定是Java对象，但是Java对象不一定是Bean。
+ * [实例化]是对象到bean的整个过程；[初始化]是对象new出来后做的事情
  * IOC、AOP、循环依赖(自动注入)、BeanPostProcessor后置处理器、Aware回调
  * spring容器：是spring容器组件的组合，并不是我们理解的单例池，
  * （ApplicationContext、BeanDefinition、BeanFactoryPostProcessor、BeanFactory、beanDefinitionMap、三个缓存对象、后置处理器）
  * 一般使用ApplicationContext，其不但包含了BeanFactory的作用，同时还进行更多的扩展。
- * Class=>BeanDefinition=>Object(Bean)
- * 扫描=>解析=>调用扩展=>遍历map解析=>new
+ * Class => BeanDefinition => Object(Bean)
+ * 扫描 => 解析 => 调用扩展 => 遍历map解析 => new
  * BeanPostProcessor & BeanFactoryPostProcessor 均是后置处理器，都是Spring初始化bean时对外暴露的扩展点。
  * Aware在大多数情况下，我们应该避免使用任何Aware接口，除非我们需要它们。实现这些接口会将代码耦合到Spring框架
  * GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
@@ -178,6 +178,7 @@ public class AnnotationApplicationTest {
 	 */
 	@Test
 	public void getCircularDependency() {
+		// 初始化spring容器
 		ApplicationContext ioc = new AnnotationConfigApplicationContext(CircularDependencyConfig.class);
 		printAllBeansName(ioc);
 		IndexService indexService = ioc.getBean(IndexService.class);

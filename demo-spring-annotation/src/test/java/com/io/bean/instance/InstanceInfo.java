@@ -1,8 +1,6 @@
 package com.io.bean.instance;
 
 /**
- * Project -
- *
  * @author guodd
  * @version 1.0
  * @since JDK1.8

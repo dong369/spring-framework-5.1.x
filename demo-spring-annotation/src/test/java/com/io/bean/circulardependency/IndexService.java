@@ -26,6 +26,7 @@ public class IndexService {
 	}
 
 	public IndexDao getIndexDao() {
+		System.out.println(indexDao);
 		return indexDao;
 	}
 }
