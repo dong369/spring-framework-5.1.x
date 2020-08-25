@@ -5,7 +5,8 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 
 /**
- * 后置处理器，定义了在bean初始化前和初始化后执行的方法。应用程序自己可以实现该接口定义自己特殊的逻辑。
+ * 后置处理器，定义了在bean初始化前和初始化后执行的方法。
+ * 应用程序自己可以实现该接口定义自己特殊的逻辑。
  *
  * @author guodd
  * @version 1.0
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class MyBeanPostProcessor implements BeanPostProcessor {
+	// 初始化之前
 	@Override
 	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
 		System.out.println("postProcessBeforeInitialization=>" + beanName);

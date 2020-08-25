@@ -16,11 +16,13 @@ public class PostConstructInfo {
 		System.out.println("constructor...");
 	}
 
+	// 对象创建赋值之后调用
 	@PostConstruct
 	public void postConstruct() {
 		System.out.println("postConstruct...");
 	}
 
+	// 容器移除对象之前
 	@PreDestroy
 	public void preDestroy() {
 		System.out.println("preDestroy...");

@@ -38,7 +38,7 @@ public class CycleInfo {
 	@Override
 	public String toString() {
 		return "CycleInfo{" +
-				"name='" + name + '\'' +
-				'}';
+			   "name='" + name + '\'' +
+			   '}';
 	}
 }

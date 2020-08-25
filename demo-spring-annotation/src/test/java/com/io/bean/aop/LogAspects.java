@@ -31,6 +31,7 @@ public class LogAspects {
 		System.out.println(joinPoint.getSignature().getName() + "方法，结束...after");
 	}
 
+	// JoinPoint这个参数一定要出现在参数表的第一位
 	@AfterReturning(value = "point()", returning = "result")
 	public void logReturn(JoinPoint joinPoint, Object result) {
 		System.out.println(joinPoint.getSignature().getName() + "方法，正常返回...returning" + result);

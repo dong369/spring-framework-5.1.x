@@ -2,7 +2,7 @@ package com.io.bean.circulardependency;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+// JDK 11被移除需要添加额外的jakarta.annotation-api
 import javax.annotation.PostConstruct;
 
 /**

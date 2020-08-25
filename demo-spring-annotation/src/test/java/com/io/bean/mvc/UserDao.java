@@ -1,4 +1,4 @@
-package com.io.bean.dao;
+package com.io.bean.mvc;
 
 import org.springframework.stereotype.Repository;
 

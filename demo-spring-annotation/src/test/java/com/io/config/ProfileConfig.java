@@ -31,6 +31,12 @@ public class ProfileConfig implements EmbeddedValueResolverAware {
 
 	private String driver;
 
+	@Override
+	public void setEmbeddedValueResolver(StringValueResolver resolver) {
+		this.resolver = resolver;
+		driver = resolver.resolveStringValue("${db.driver}");
+	}
+
 	@Bean
 	@Profile("dev")
 	public DataSource dataSourceDev(@Value("${db.password}") String password) throws PropertyVetoException {
@@ -53,7 +59,6 @@ public class ProfileConfig implements EmbeddedValueResolverAware {
 		return dataSource;
 	}
 
-
 	@Bean
 	@Profile("prod")
 	public DataSource dataSourceProd(@Value("${db.password}") String password) throws PropertyVetoException {
@@ -63,11 +68,5 @@ public class ProfileConfig implements EmbeddedValueResolverAware {
 		dataSource.setJdbcUrl("mysql:jdbc:///test");
 		dataSource.setDriverClass(driver);
 		return dataSource;
-	}
-
-	@Override
-	public void setEmbeddedValueResolver(StringValueResolver resolver) {
-		this.resolver = resolver;
-		driver = resolver.resolveStringValue("${db.driver}");
 	}
 }

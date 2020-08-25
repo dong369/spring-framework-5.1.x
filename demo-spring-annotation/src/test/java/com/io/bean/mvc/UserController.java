@@ -1,4 +1,4 @@
-package com.io.bean.controller;
+package com.io.bean.mvc;
 
 import org.springframework.stereotype.Controller;
 

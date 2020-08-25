@@ -23,7 +23,8 @@ public class MyTypeFilter implements TypeFilter {
 		ClassMetadata classMetadata = metadataReader.getClassMetadata();
 		// 获取类的资源
 		Resource resource = metadataReader.getResource();
-		System.out.println("TypeFilter=>" + classMetadata.getClassName());
-		return classMetadata.getClassName().contains("ser");
+		String s = metadataReaderFactory.toString();
+		// System.out.println("TypeFilter=>" + classMetadata.getClassName());
+		return classMetadata.getClassName().contains("er");
 	}
 }

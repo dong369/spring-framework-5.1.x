@@ -242,6 +242,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		// 认真检查单例缓存是否有手动注册的单例。重点方法
 		// 01、为什么要拿bean（spring单例池中拿）
 		// 02、创建bean的时候为什么还要get
+		// 条件debug：beanName.equals("indexDao") || beanName.equals("indexService")
 		Object sharedInstance = getSingleton(beanName);
 		if (sharedInstance != null && args == null) {
 			if (logger.isTraceEnabled()) {
@@ -326,6 +327,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					sharedInstance = getSingleton(beanName, () -> {
 						try {
 							// 完成了目标对象的创建，如果需要代理，还完成了代理
+							// 同时还要放入缓存中
 							return createBean(beanName, mbd, args);
 						} catch (BeansException ex) {
 							// Explicitly remove instance from singleton cache: It might have been put there
@@ -1647,12 +1649,17 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		// Now we have the bean instance, which may be a normal bean or a FactoryBean.
 		// If it's a FactoryBean, we use it to create a bean instance, unless the
 		// caller actually wants a reference to the factory.
+		// 如果bean不是factoryBean，那么会直接返回Bean
+		// 或者bean是factoryBean但name是以&特殊符号开头的,此时表示要获取FactoryBean的原生对象。
+		// 例如：如果name = &customerFactoryBean，那么此时会返回CustomerFactoryBean类型的bean
 		if (!(beanInstance instanceof FactoryBean) || BeanFactoryUtils.isFactoryDereference(name)) {
 			return beanInstance;
 		}
 
+		// 如果是FactoryBean，那么先从cache中获取，如果缓存不存在，则会去调用FactoryBean的getObject()方法。
 		Object object = null;
 		if (mbd == null) {
+			// 从缓存中获取。什么时候放入缓存的呢？在第一次调用getObject()方法时，会将返回值放入到缓存。
 			object = getCachedObjectForFactoryBean(beanName);
 		}
 		if (object == null) {
@@ -1663,6 +1670,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				mbd = getMergedLocalBeanDefinition(beanName);
 			}
 			boolean synthetic = (mbd != null && mbd.isSynthetic());
+			// 在getObjectFromFactoryBean()方法中最终会调用到getObject()方法
 			object = getObjectFromFactoryBean(factory, beanName, !synthetic);
 		}
 		return object;

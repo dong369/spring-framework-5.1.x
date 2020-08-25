@@ -823,8 +823,16 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			// 抽象默认是false；单例；懒加载
 			// 默认对象判断都满足进入if
 			if (!bd.isAbstract() && bd.isSingleton() && !bd.isLazyInit()) {
+				// 在此处会根据beanName判断bean是不是一个FactoryBean，实现了FactoryBean接口的bean，会返回true
+				// 此时当beanName为customerFactoryBean时，会返回true，会进入到if语句中
+				// debug beanName.equals("myFactoryBean")
 				if (isFactoryBean(beanName)) {
+					// 然后通过getBean()方法去获取或者创建单例对象
+					// 注意：在此处为beanName拼接了一个前缀：FACTORY_BEAN_PREFIX
+					// FACTORY_BEAN_PREFIX是一个常量字符串，即：&
+					// 所以在此时容器启动阶段，对于customerFactoryBean，应该是：getBean("&customerFactoryBean")
 					Object bean = getBean(FACTORY_BEAN_PREFIX + beanName);
+					// 下面这一段逻辑，是判断是否需要在容器启动阶段，就去实例化getObject()返回的对象，即是否调用FactoryBean的getObject()方法
 					if (bean instanceof FactoryBean) {
 						final FactoryBean<?> factory = (FactoryBean<?>) bean;
 						boolean isEagerInit;
@@ -1095,6 +1103,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			ResolvableType requiredType, @Nullable Object[] args, boolean nonUniqueAsNull) throws BeansException {
 
 		Assert.notNull(requiredType, "Required type must not be null");
+		// 得到bean的所有名字
 		String[] candidateNames = getBeanNamesForType(requiredType);
 
 		if (candidateNames.length > 1) {

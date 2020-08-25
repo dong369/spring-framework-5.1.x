@@ -263,7 +263,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 					} catch (Throwable ex) {
 						throw new BeanCreationException(beanName,
 								"Resolution of declared constructors on bean Class [" + beanClass.getName() +
-										"] from ClassLoader [" + beanClass.getClassLoader() + "] failed", ex);
+								"] from ClassLoader [" + beanClass.getClassLoader() + "] failed", ex);
 					}
 					List<Constructor<?>> candidates = new ArrayList<>(rawCandidates.length);
 					Constructor<?> requiredConstructor = null;
@@ -293,16 +293,16 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 							if (requiredConstructor != null) {
 								throw new BeanCreationException(beanName,
 										"Invalid autowire-marked constructor: " + candidate +
-												". Found constructor with 'required' Autowired annotation already: " +
-												requiredConstructor);
+										". Found constructor with 'required' Autowired annotation already: " +
+										requiredConstructor);
 							}
 							boolean required = determineRequiredStatus(ann);
 							if (required) {
 								if (!candidates.isEmpty()) {
 									throw new BeanCreationException(beanName,
 											"Invalid autowire-marked constructors: " + candidates +
-													". Found constructor with 'required' Autowired annotation: " +
-													candidate);
+											". Found constructor with 'required' Autowired annotation: " +
+											candidate);
 								}
 								requiredConstructor = candidate;
 							}
@@ -318,16 +318,16 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 								candidates.add(defaultConstructor);
 							} else if (candidates.size() == 1 && logger.isInfoEnabled()) {
 								logger.info("Inconsistent constructor declaration on bean with name '" + beanName +
-										"': single autowire-marked constructor flagged as optional - " +
-										"this constructor is effectively required since there is no " +
-										"default constructor to fall back to: " + candidates.get(0));
+											"': single autowire-marked constructor flagged as optional - " +
+											"this constructor is effectively required since there is no " +
+											"default constructor to fall back to: " + candidates.get(0));
 							}
 						}
 						candidateConstructors = candidates.toArray(new Constructor<?>[0]);
 					} else if (rawCandidates.length == 1 && rawCandidates[0].getParameterCount() > 0) {
 						candidateConstructors = new Constructor<?>[]{rawCandidates[0]};
 					} else if (nonSyntheticConstructors == 2 && primaryConstructor != null &&
-							defaultConstructor != null && !primaryConstructor.equals(defaultConstructor)) {
+							   defaultConstructor != null && !primaryConstructor.equals(defaultConstructor)) {
 						candidateConstructors = new Constructor<?>[]{primaryConstructor, defaultConstructor};
 					} else if (nonSyntheticConstructors == 1 && primaryConstructor != null) {
 						candidateConstructors = new Constructor<?>[]{primaryConstructor};
@@ -345,6 +345,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 	public PropertyValues postProcessProperties(PropertyValues pvs, Object bean, String beanName) {
 		InjectionMetadata metadata = findAutowiringMetadata(beanName, bean.getClass(), pvs);
 		try {
+			// 进行inject注入
 			metadata.inject(bean, beanName, pvs);
 		} catch (BeanCreationException ex) {
 			throw ex;
@@ -440,7 +441,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 					if (method.getParameterCount() == 0) {
 						if (logger.isInfoEnabled()) {
 							logger.info("Autowired annotation should only be used on methods with parameters: " +
-									method);
+										method);
 						}
 					}
 					boolean required = determineRequiredStatus(ann);
@@ -494,7 +495,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 	protected <T> Map<String, T> findAutowireCandidates(Class<T> type) throws BeansException {
 		if (this.beanFactory == null) {
 			throw new IllegalStateException("No BeanFactory configured - " +
-					"override the getBeanOfType method or specify the 'beanFactory' property");
+											"override the getBeanOfType method or specify the 'beanFactory' property");
 		}
 		return BeanFactoryUtils.beansOfTypeIncludingAncestors(this.beanFactory, type);
 	}
@@ -510,7 +511,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 				}
 				if (logger.isTraceEnabled()) {
 					logger.trace("Autowiring by type from bean name '" + beanName +
-							"' to bean named '" + autowiredBeanName + "'");
+								 "' to bean named '" + autowiredBeanName + "'");
 				}
 			}
 		}
@@ -574,7 +575,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 							if (autowiredBeanNames.size() == 1) {
 								String autowiredBeanName = autowiredBeanNames.iterator().next();
 								if (beanFactory.containsBean(autowiredBeanName) &&
-										beanFactory.isTypeMatch(autowiredBeanName, field.getType())) {
+									beanFactory.isTypeMatch(autowiredBeanName, field.getType())) {
 									this.cachedFieldValue = new ShortcutDependencyDescriptor(
 											desc, autowiredBeanName, field.getType());
 								}
@@ -655,7 +656,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 								for (int i = 0; i < paramTypes.length; i++) {
 									String autowiredBeanName = it.next();
 									if (beanFactory.containsBean(autowiredBeanName) &&
-											beanFactory.isTypeMatch(autowiredBeanName, paramTypes[i])) {
+										beanFactory.isTypeMatch(autowiredBeanName, paramTypes[i])) {
 										cachedMethodArguments[i] = new ShortcutDependencyDescriptor(
 												descriptors[i], autowiredBeanName, paramTypes[i]);
 									}

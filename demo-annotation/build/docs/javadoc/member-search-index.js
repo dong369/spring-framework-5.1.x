@@ -1,1 +1,0 @@
-memberSearchIndex = [{"l":"BeanConfig()","h":"","u":"%3Cinit%3E()"},{"l":"main(String[])","h":"","u":"main(java.lang.String[])"},{"l":"MainTest()","h":"","u":"%3Cinit%3E()"}]

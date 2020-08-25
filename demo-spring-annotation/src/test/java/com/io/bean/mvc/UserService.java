@@ -1,4 +1,4 @@
-package com.io.bean.service;
+package com.io.bean.mvc;
 
 import org.springframework.stereotype.Service;
 

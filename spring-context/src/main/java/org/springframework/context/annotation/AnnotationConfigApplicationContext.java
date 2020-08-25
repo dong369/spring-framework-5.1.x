@@ -63,10 +63,10 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * through {@link #register} calls and then manually {@linkplain #refresh refreshed}.
 	 */
 	public AnnotationConfigApplicationContext() {
-		// 同时会调用父类的无参构造器：this.beanFactory = new DefaultListableBeanFactory();
+		// 此处会先调用父类的构造器，即先执行super()：this.beanFactory = new DefaultListableBeanFactory();
 		// 创建BeanDefinition读取器：spring内部BeanDefinition的注册（主要是后置处理器），完成开天辟地的基础五个bean（主要是后置处理器）
 		this.reader = new AnnotatedBeanDefinitionReader(this);
-		// 创建BeanDefinition扫描器
+		// 创建BeanDefinition扫描器，该扫描器在后面并没有用到
 		this.scanner = new ClassPathBeanDefinitionScanner(this);
 	}
 
@@ -97,7 +97,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 		// setAllowBeanDefinitionOverriding(false);
 		// 注册配置类（们），因为配置需要解析，一般不需要自己扫描，this.beanDefinitionMap.put(beanName, beanDefinition);
 		register(componentClasses);
-		// 启动刷新容器
+		// 启动刷新容器，实例化、初始化、自动装配、AOP等功能
 		refresh();
 	}
 

@@ -437,7 +437,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	ApplicationEventMulticaster getApplicationEventMulticaster() throws IllegalStateException {
 		if (this.applicationEventMulticaster == null) {
 			throw new IllegalStateException("ApplicationEventMulticaster not initialized - " +
-					"call 'refresh' before multicasting events via the context: " + this);
+											"call 'refresh' before multicasting events via the context: " + this);
 		}
 		return this.applicationEventMulticaster;
 	}
@@ -451,7 +451,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	LifecycleProcessor getLifecycleProcessor() throws IllegalStateException {
 		if (this.lifecycleProcessor == null) {
 			throw new IllegalStateException("LifecycleProcessor not initialized - " +
-					"call 'refresh' before invoking lifecycle methods via the context: " + this);
+											"call 'refresh' before invoking lifecycle methods via the context: " + this);
 		}
 		return this.lifecycleProcessor;
 	}
@@ -533,61 +533,91 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	@Override
 	public void refresh() throws BeansException, IllegalStateException {
 		synchronized (this.startupShutdownMonitor) {
+			// 1、准备工作包括：设置启动时间、是否激活标识位、初始化属性配置、初始化属性配置文件、检验必须属性以及监听器
 			// Prepare this context for refreshing.（准备此上下文以进行刷新。）
-			// 准备工作包括：设置启动时间、是否激活标识位、初始化属性配置
 			prepareRefresh();
 
+			// 2、返回一个factory，为什么需要返回一个工厂？因为要对工程进行初始化！！！给beanFactory设置序列化id
 			// Tell the subclass to refresh the internal bean factory.（告诉子类刷新内部bean工厂。）
-			// 返回一个factory，为什么需要返回一个工厂？因为要对工程进行初始化！！！
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
+			// 3、准备工厂向beanFactory中注册了两个BeanPostProcessor，以及三个和环境相关的bean
 			// Prepare the bean factory for use in this context.（准备在这种情况下使用的bean工厂。）
-			// 准备工厂
+			// 这两个后置处理器为ApplicationContextAwareProcessor和ApplicationListenerDetector
+			// 前一个后置处理是为实现了ApplicationContextAware接口的类，回调setApplicationContext()方法
+			// 后一个处理器时用来检测ApplicationListener类的，当某个Bean实现了ApplicationListener接口的bean被创建好后，会被加入到监听器列表中
 			prepareBeanFactory(beanFactory);
 
 			try {
+				// 1、允许在上下文子类中对bean工厂进行后处理。
 				// Allows post-processing of the bean factory in context subclasses.（允许在上下文子类中对bean工厂进行后处理。）
 				// 这个方法在当前版本的spring中没有任何代码，可能是spring期待后面的版本进行扩展
+				// 空方法，由子类实现
 				postProcessBeanFactory(beanFactory);
 
-				// ※Invoke factory processors registered as beans in the context.（完成所谓的包扫描，向beanDefinitionNames的map中添加bean）
-				// 完成所谓的包扫描
+				// ※※2、调用在上下文中注册为bean的工厂后置处理器，完成所谓的包扫描
+				// 执行所有的BeanFactoryPostProcessors，由于Spring会内置一个BeanFactoryPostProcessor
+				// Invoke factory processors registered as beans in the context.（完成所谓的包扫描，向beanDefinitionNames的map中添加bean）
 				// 在spring环境中去执行已经注册的factory processors
 				// 设置执行自定义的ProcessBeanFactory和spring内部自己定义的
-				// debug查看beanDefinitionMap的变化
+				// 执行所有的BeanFactoryPostProcessor，包括自定义的，以及spring内置的。
+				// 默认情况下，容器中只有一个BeanFactoryPostProcessor,即：Spring内置的，ConfigurationClassPostProcessor(这个类很重要)
+				// 会先执行实现了BeanDefinitionRegistryPostProcessor接口的类，然后执行BeanFactoryPostProcessor的类
+				// ConfigurationClassPostProcessor类的postProcessorBeanFactory()方法进行了@Configuration类的解析，@ComponentScan的扫描，以及@Import注解的处理
+				// 经过这一步以后,会将所有交由spring管理的bean所对应的BeanDefinition放入到beanFactory的beanDefinitionMap中
+				// 同时ConfigurationClassPostProcessor类的postProcessorBeanFactory()方法执行完后，向容器中添加了一个后置处理器ImportAwareBeanPostProcessor
+				// debug查看beanDefinitionMap的存放数据变化
 				invokeBeanFactoryPostProcessors(beanFactory);
 
-				// ※ Register bean processors that intercept bean creation.（所有BeanPostProcessor初始化的调用点）
-				// 注册BeanPostProcessors
+				// 3、注册拦截Bean创建的Bean处理器
+				// 执行所有的BeanPostProcessors，由于Spring会内置一个BeanPostProcessor
+				// Register bean processors that intercept bean creation.（所有BeanPostProcessor初始化的调用点）
+				// 注册所有的BeanPostProcessor，因为在方法里面调用了getBean()方法，所以在这一步，实际上已经将所有的BeanPostProcessor实例化了
+				// 为什么要在这一步就将BeanPostProcessor实例化呢？因为后面要实例化bean，而BeanPostProcessor是用来干预bean的创建过程的，所以必须在bean实例化之前就实例化所有的BeanPostProcessor(包括开发人员自己定义的)
+				// 最后再重新注册了ApplicationListenerDetector，这样做的目的是为了将ApplicationListenerDetector放入到后置处理器的最末端
 				registerBeanPostProcessors(beanFactory);
 
+				// 4、初始化MessageSource，用来做消息国际化。在一般项目中不会用到消息国际化
 				// Initialize message source for this context.（为此上下文初始化消息源。）
 				initMessageSource();
 
+				// 5、初始化应用事件广播器
 				// Initialize event multicaster for this context.（为此上下文初始化事件多播器。）
-				// 初始化应用事件广播器
+				// 初始化事件广播器，如果容器中存在了名字为applicationEventMulticaster的广播器，则使用该广播器
+				// 如果没有，则初始化一个SimpleApplicationEventMulticaster
+				// 事件广播器的用途是，发布事件，并且为所发布的时间找到对应的事件监听器
 				initApplicationEventMulticaster();
 
+				// 6、执行其他的初始化操作
 				// Initialize other special beans in specific context subclasses.（在特定上下文子类中初始化其他特殊bean。）
+				// 执行其他的初始化操作，例如和SpringMVC整合时，需要初始化一些其他的bean，但是对于纯spring工程来说，onFresh方法是一个空方法
 				onRefresh();
 
+				// 7、事件广播器
 				// Check for listener beans and register them.（检查侦听器bean并注册它们。）
+				// 这一步会将自定义的listener的bean名称放入到事件广播器中
+				// 同时还会将早期的ApplicationEvent发布(对于单独的spring工程来说，在此时不会有任何ApplicationEvent发布，但是和springMVC整合时，springMVC会执行onRefresh()方法，在这里会发布事件)
 				registerListeners();
 
+				// ※※8、完成Bean工厂初始化
 				// ※Instantiate all remaining (non-lazy-init) singletons.（spring开始实例化所有单例非懒加载Bean的调用点）
-				// 完成Bean工厂初始化
-				// debug查看是否打印构造器信息
+				// 实例化剩余的非懒加载的单例bean(注意：剩余、非懒加载、单例)
+				// 为什么说是剩余呢？如果开发人员自定义了BeanPostProcessor，而BeanPostProcessor在前面已经实例化了，所以在这里不会再实例化，因此这里使用剩余一词
+				// debug查看是否打印构造器信息，BeanFactory完成初始化
 				finishBeanFactoryInitialization(beanFactory);
 
+				// 9、结束refresh
 				// Last step: publish corresponding event.（最后一步：发布相应的事件。）
+				// 结束refresh，主要干了一件事，就是发布一个事件ContextRefreshEvent，通知大家spring容器refresh结束了。
 				finishRefresh();
 			} catch (BeansException ex) {
 				if (logger.isWarnEnabled()) {
 					logger.warn("Exception encountered during context initialization - " +
-							"cancelling refresh attempt: " + ex);
+								"cancelling refresh attempt: " + ex);
 				}
 
 				// Destroy already created singletons to avoid dangling resources.
+				// 出异常后销毁bean
 				destroyBeans();
 
 				// Reset 'active' flag.
@@ -598,6 +628,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			} finally {
 				// Reset common introspection caches in Spring's core, since we
 				// might not ever need metadata for singleton beans anymore...
+				// 在bean的实例化过程中，会缓存很多信息，例如bean的注解信息，但是当单例bean实例化完成后，这些缓存信息已经不会再使用了，所以可以释放这些内存资源了
 				resetCommonCaches();
 			}
 		}
@@ -732,6 +763,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 */
 	protected void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
 		// 完成扫描
+		// BeanFactoryPostProcessor分两类：一类直接实现BeanFactoryPostProcessor；另一类是BeanDefinitionRegistryPostProcessor
 		PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(beanFactory, getBeanFactoryPostProcessors());
 
 		// Detect a LoadTimeWeaver and prepare for weaving, if found in the meantime
@@ -791,6 +823,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 */
 	protected void initApplicationEventMulticaster() {
 		ConfigurableListableBeanFactory beanFactory = getBeanFactory();
+		// 判断spring容器中是否已经存在beanName = applicationEventMulticaster的事件广播器
+		// 例如：如果开发人员自己注册了一个
+		// 如果存在，则使用已经存在的；否则使用spring默认的：SimpleApplicationEventMulticaster
 		if (beanFactory.containsLocalBean(APPLICATION_EVENT_MULTICASTER_BEAN_NAME)) {
 			this.applicationEventMulticaster =
 					beanFactory.getBean(APPLICATION_EVENT_MULTICASTER_BEAN_NAME, ApplicationEventMulticaster.class);
@@ -802,7 +837,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			beanFactory.registerSingleton(APPLICATION_EVENT_MULTICASTER_BEAN_NAME, this.applicationEventMulticaster);
 			if (logger.isTraceEnabled()) {
 				logger.trace("No '" + APPLICATION_EVENT_MULTICASTER_BEAN_NAME + "' bean, using " +
-						"[" + this.applicationEventMulticaster.getClass().getSimpleName() + "]");
+							 "[" + this.applicationEventMulticaster.getClass().getSimpleName() + "]");
 			}
 		}
 	}
@@ -828,7 +863,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			beanFactory.registerSingleton(LIFECYCLE_PROCESSOR_BEAN_NAME, this.lifecycleProcessor);
 			if (logger.isTraceEnabled()) {
 				logger.trace("No '" + LIFECYCLE_PROCESSOR_BEAN_NAME + "' bean, using " +
-						"[" + this.lifecycleProcessor.getClass().getSimpleName() + "]");
+							 "[" + this.lifecycleProcessor.getClass().getSimpleName() + "]");
 			}
 		}
 	}
@@ -878,8 +913,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 */
 	protected void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory) {
 		// Initialize conversion service for this context.
+		// 初始化转换服务
 		if (beanFactory.containsBean(CONVERSION_SERVICE_BEAN_NAME) &&
-				beanFactory.isTypeMatch(CONVERSION_SERVICE_BEAN_NAME, ConversionService.class)) {
+			beanFactory.isTypeMatch(CONVERSION_SERVICE_BEAN_NAME, ConversionService.class)) {
 			beanFactory.setConversionService(
 					beanFactory.getBean(CONVERSION_SERVICE_BEAN_NAME, ConversionService.class));
 		}
@@ -887,6 +923,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		// Register a default embedded value resolver if no bean post-processor
 		// (such as a PropertyPlaceholderConfigurer bean) registered any before:
 		// at this point, primarily for resolution in annotation attribute values.
+		// 如果前面没有注册一个类似于PropertyPlaceholderConfigurer后置处理器的bean，那么在这儿会注册一个内置的属性后置处理器
+		// 这儿主要是处理被加了注解的属性
 		if (!beanFactory.hasEmbeddedValueResolver()) {
 			beanFactory.addEmbeddedValueResolver(strVal -> getEnvironment().resolvePlaceholders(strVal));
 		}
@@ -901,10 +939,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		beanFactory.setTempClassLoader(null);
 
 		// Allow for caching all bean definition metadata, not expecting further changes.
+		// 目的是为了不让在其他的地方在修改bean的BeanDefinition
 		beanFactory.freezeConfiguration();
 
 		// Instantiate all remaining (non-lazy-init) singletons.
 		// 实例化所有剩余的（非延迟初始化）单例，实例化单例。
+		// 实例化之前的单例，getBean()=>doGetBean()=>createBean()=>doCreateBean()
 		beanFactory.preInstantiateSingletons();
 	}
 
@@ -1348,7 +1388,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	private MessageSource getMessageSource() throws IllegalStateException {
 		if (this.messageSource == null) {
 			throw new IllegalStateException("MessageSource not initialized - " +
-					"call 'refresh' before accessing messages via the context: " + this);
+											"call 'refresh' before accessing messages via the context: " + this);
 		}
 		return this.messageSource;
 	}

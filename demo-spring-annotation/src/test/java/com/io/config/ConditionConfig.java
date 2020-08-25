@@ -3,7 +3,7 @@ package com.io.config;
 import com.io.bean.bean.Person;
 import com.io.bean.condition.conditional.Linux;
 import com.io.bean.condition.conditional.Windows;
-import com.io.bean.service.UserService;
+import com.io.bean.mvc.UserService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
