@@ -23,7 +23,8 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  * 原理：
  * @see EnableAspectJAutoProxy
  * 1）、流程1创建注册 {@link org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator}的过程
- * 2）、
+ * 2）、创建代理对象的过程
+ * 3）、目标方法执行
  */
 @Configuration
 @EnableAspectJAutoProxy

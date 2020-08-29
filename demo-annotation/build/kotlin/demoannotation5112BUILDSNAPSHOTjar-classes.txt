@@ -1,1 +1,0 @@
-D:\dev\code\idea-workspace\Framework\spring-framework-5.1.x\demo-annotation\build\classes\java\main\com\io\main\BeanConfig.class;D:\dev\code\idea-workspace\Framework\spring-framework-5.1.x\demo-annotation\build\classes\java\main\com\io\main\MainTest.class

@@ -354,8 +354,8 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 			return false;
 		}
 		throw new ConflictingBeanDefinitionException("Annotation-specified bean name '" + beanName +
-				"' for bean class [" + beanDefinition.getBeanClassName() + "] conflicts with existing, " +
-				"non-compatible bean definition of same name and class [" + existingDef.getBeanClassName() + "]");
+													 "' for bean class [" + beanDefinition.getBeanClassName() + "] conflicts with existing, " +
+													 "non-compatible bean definition of same name and class [" + existingDef.getBeanClassName() + "]");
 	}
 
 	/**

@@ -1,6 +1,7 @@
 package com.io.bean.aware;
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.BeanNameAware;
@@ -33,8 +34,8 @@ public class MyAwareInfo implements
 		EnvironmentAware, // 能获取当前容器的环境属性信息
 		MessageSourceAware, // 	能获取国际化文本信息,Message Source的相关文本信息
 		BeanNameAware, // 获取容器中Bean的名称
-		ApplicationEventPublisherAware // 应用事件发布器，可以用来发布事件
-{
+		ApplicationEventPublisherAware, // 应用事件发布器，可以用来发布事件
+		BeanClassLoaderAware {
 
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -80,5 +81,10 @@ public class MyAwareInfo implements
 
 	@Override
 	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+	}
+
+	@Override
+	public void setBeanClassLoader(ClassLoader classLoader) {
+
 	}
 }

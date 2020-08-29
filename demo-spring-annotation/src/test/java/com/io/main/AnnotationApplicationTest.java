@@ -7,7 +7,7 @@ import com.io.bean.circulardependency.IndexDao;
 import com.io.bean.circulardependency.IndexService;
 import com.io.bean.factory.factorybean.FactoryBeanInfo;
 import com.io.bean.factory.factorybean.MyFactoryBean;
-import com.io.bean.postprocessor.PostProcessorConfig;
+import com.io.bean.listener.MyApplicationEvent;
 import com.io.bean.value.ValueInfo;
 import com.io.config.*;
 import com.io.mybatis.UserDaoI;
@@ -17,6 +17,7 @@ import org.springframework.beans.factory.support.AbstractAutowireCapableBeanFact
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.core.env.Environment;
 
 /**
@@ -43,6 +44,7 @@ import org.springframework.core.env.Environment;
 public class AnnotationApplicationTest {
 	/**
 	 * 01、给容器中注册组件：包扫描+组件标注注解(@Bean+包扫描+包含/排除规则)
+	 * spring中bean的实例化过程，创建java文件=>编译成class字节码=>BeanDefinition=>put map=>自定义BeanFactoryPostProcessor=>preInstantiateSingleton
 	 */
 	@Test
 	public void getCreateBean() {
@@ -148,7 +150,9 @@ public class AnnotationApplicationTest {
 	 * 方式四、{@link org.springframework.beans.factory.config.BeanPostProcessor}
 	 * <p>
 	 * BeanPostProcessor的执行顺序是在BeanFactoryPostProcessor之后
-	 * spring底层使用的
+	 * <p>
+	 * 销毁
+	 * {@link AbstractApplicationContext#doClose()}
 	 */
 	@Test
 	public void getCycle() {
@@ -259,7 +263,7 @@ public class AnnotationApplicationTest {
 	}
 
 	/**
-	 * 12、后置处理器
+	 * 13、后置处理器，扩展点BeanPostProcessor（BeanFactoryPostProcessor和BeanDefinitionRegistryPostProcessor）
 	 * PostProcessor类型接口常用类分为两种，一种是BeanFactoryPostProcessor，另一种是BeanPostProcessor
 	 *
 	 * @see org.springframework.beans.factory.config.BeanFactoryPostProcessor    关于对象工厂BeanFactory创建完毕的回调处理
@@ -271,18 +275,40 @@ public class AnnotationApplicationTest {
 		AnnotationConfigApplicationContext ioc = new AnnotationConfigApplicationContext(PostProcessorConfig.class);
 	}
 
-	// 15、声明式事物
+	/**
+	 * 14、声明式事物
+	 *
+	 * @see org.springframework.transaction.annotation.EnableTransactionManagement
+	 * @see org.springframework.transaction.PlatformTransactionManager
+	 */
+	@Test
+	public void tx() {
+		AnnotationConfigApplicationContext ioc = new AnnotationConfigApplicationContext(TxConfig.class);
+		printAllBeansName(ioc);
+	}
 
-	// 16、扩展（BeanFactoryPostProcessor和BeanDefinitionRegistryPostProcessor）
+	/**
+	 * 17、扩展事件（ApplicationListener）
+	 * {@link org.springframework.context.event.ContextRefreshedEvent}
+	 * {@link org.springframework.context.event.ContextClosedEvent}
+	 */
+	@Test
+	public void myApplicationListener() {
+		AnnotationConfigApplicationContext ioc = new AnnotationConfigApplicationContext(ApplicationListenerConfig.class);
+		printAllBeansName(ioc);
+		// 自定义事件监听器
+		ioc.publishEvent(new MyApplicationEvent(this, "msg"));
+		ioc.close();
+	}
 
-	// 17、扩展事件（ApplicationListener）
-
-	// 18、mybatis整合
-	// SqlSessionFactoryBean & MapperFactoryBean
-	// 加入mybatis、spring
-	// 原理是通过JDK动态代理为mapper产出代理对象
-	// 自己产出的对象如何交给spring管理（@Bean）
-	// spring如何把一个类变成bean
+	/**
+	 * 18、mybatis整合
+	 * SqlSessionFactoryBean & MapperFactoryBean
+	 * 加入mybatis、spring
+	 * 原理是通过JDK动态代理为mapper产出代理对象
+	 * 自己产出的对象如何交给spring管理（@Bean）
+	 * spring如何把一个类变成bean
+	 */
 	@Test
 	public void mybatis() {
 		ApplicationContext context = new AnnotationConfigApplicationContext(MybatisConfig.class);
@@ -293,9 +319,11 @@ public class AnnotationApplicationTest {
 		SqlSessionFactoryBean sqlSessionFactoryBean;
 	}
 
-	// 19、hibernate整合
-	// SessionFactory & 声明式事务
-	// 加入hibernate、spring
+	/**
+	 * 19、hibernate整合
+	 * SessionFactory & 声明式事务
+	 * 加入hibernate、spring
+	 */
 	@Test
 	public void hibernate() {
 
