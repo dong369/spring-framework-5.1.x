@@ -45,6 +45,9 @@ public class AnnotationApplicationTest {
 	/**
 	 * 01、给容器中注册组件：包扫描+组件标注注解(@Bean+包扫描+包含/排除规则)
 	 * spring中bean的实例化过程，创建java文件=>编译成class字节码=>BeanDefinition=>put map=>自定义BeanFactoryPostProcessor=>preInstantiateSingleton
+	 * Bean自身的方法：配置文件中的init-method和destroy-method配置的方法、Bean对象自己调用的方法
+	 * Bean级接口方法：BeanNameAware、BeanFactoryAware、InitializingBean、DisposableBean等接口中的方法
+	 * 容器级接口方法：InstantiationAwareBeanPostProcessor、BeanPostProcessor等后置处理器实现类中重写的方法
 	 */
 	@Test
 	public void getCreateBean() {
@@ -115,6 +118,8 @@ public class AnnotationApplicationTest {
 
 	/**
 	 * 06、FactoryBean给容器中注册组件
+	 * FactoryBean的特殊之处在于它可以向容器中注册两个Bean，一个是它本身，一个是FactoryBean.getObject()方法返回值所代表的Bean。
+	 * 两种bean是分开放的、普通bean和特殊bean
 	 *
 	 * @see org.springframework.beans.factory.BeanFactory，是ioc容器的底层实现接口，是ApplicationContext顶级接口
 	 * @see org.springframework.beans.factory.FactoryBean，是spirng提供的工厂bean的一个接口
@@ -313,7 +318,9 @@ public class AnnotationApplicationTest {
 	public void mybatis() {
 		ApplicationContext context = new AnnotationConfigApplicationContext(MybatisConfig.class);
 		printAllBeansName(context);
-		// UserDaoI接口并不能产生对象
+		// UserDaoI接口并不能产生对象？生成代理对象
+		// bean是怎么产生的？
+		// 放到spring容器中，才能被controller、service使用
 		UserDaoI bean = context.getBean(UserDaoI.class);
 		System.out.println(bean.getUser());
 		SqlSessionFactoryBean sqlSessionFactoryBean;

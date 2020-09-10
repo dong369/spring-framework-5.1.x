@@ -50,9 +50,9 @@ final class PostProcessorRegistrationDelegate {
 
 		if (beanFactory instanceof BeanDefinitionRegistry) {
 			BeanDefinitionRegistry registry = (BeanDefinitionRegistry) beanFactory;
-			// 常规的后置处理器
+			// 第一类：常规的后置处理器
 			List<BeanFactoryPostProcessor> regularPostProcessors = new ArrayList<>();
-			// BeanDefinition注册后置处理器
+			// 第二类：BeanDefinition注册后置处理器
 			List<BeanDefinitionRegistryPostProcessor> registryProcessors = new ArrayList<>();
 
 			for (BeanFactoryPostProcessor postProcessor : beanFactoryPostProcessors) {
@@ -60,7 +60,7 @@ final class PostProcessorRegistrationDelegate {
 					// 后置处理器
 					BeanDefinitionRegistryPostProcessor registryProcessor =
 							(BeanDefinitionRegistryPostProcessor) postProcessor;
-					// ※※spring最重要类之一：ConfigurationClassPostprocessor
+					// ※※Spring最重要类之一：ConfigurationClassPostprocessor
 					registryProcessor.postProcessBeanDefinitionRegistry(registry);
 					registryProcessors.add(registryProcessor);
 				} else {

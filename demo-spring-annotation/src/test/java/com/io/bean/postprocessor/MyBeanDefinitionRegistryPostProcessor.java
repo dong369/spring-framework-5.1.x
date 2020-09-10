@@ -21,6 +21,8 @@ public class MyBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegi
 	public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
 		int count = registry.getBeanDefinitionCount();
 		// RootBeanDefinition definition = new RootBeanDefinition(PostProcessorInfo.class);
+		BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(PostProcessorInfo.class);
+		AbstractBeanDefinition beanDefinition = builder.getBeanDefinition();
 		AbstractBeanDefinition definition = BeanDefinitionBuilder.rootBeanDefinition(PostProcessorInfo.class).getBeanDefinition();
 		registry.registerBeanDefinition("bb", definition);
 		System.out.println("MyBeanDefinitionRegistryPostProcessor registry" + count);

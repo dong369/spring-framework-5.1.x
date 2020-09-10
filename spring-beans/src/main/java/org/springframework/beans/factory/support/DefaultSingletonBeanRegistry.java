@@ -68,7 +68,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>(256);
 
 	/**
-	 * 二级缓存：工厂缓存，为了产出[工厂对象]
+	 * 三级缓存：工厂缓存，为了产出[工厂对象]
 	 * 存放bean工厂对象，解决循环依赖
 	 * <p>
 	 * 单例工厂的缓存：Bean名称为ObjectFactory。
@@ -77,7 +77,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<>(16);
 
 	/**
-	 * 三级缓存：避免重复创建对象
+	 * 二级缓存：避免重复创建对象
 	 * 存放原始的bean对象用于解决循环依赖，
 	 * <p>
 	 * 早期单例对象的高速缓存：Bean名称到Bean实例。
@@ -190,6 +190,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	@Nullable
 	public Object
 	getSingleton(String beanName) {
+		// 容器中获取bean
 		return getSingleton(beanName, true);
 	}
 

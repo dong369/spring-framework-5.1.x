@@ -32,6 +32,7 @@
 	<!-- 开启基于注解版的切片动态代理 -->
 	<aop:aspectj-autoproxy/>
 
-	<!-- 开启基于注解的声明式事务 -->
-	<tx:annotation-driven/>
+	<!-- 开启基于注解的声明式事务
+	 <tx:annotation-driven/>
+	 -->
 </beans>
