@@ -167,7 +167,7 @@ public abstract class AnnotationConfigUtils {
 		if (!registry.containsBeanDefinition(CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME)) {
 			RootBeanDefinition def = new RootBeanDefinition(ConfigurationClassPostProcessor.class);
 			def.setSource(source);
-			// registerPostProcessor=>this.beanDefinitionMap.put(beanName, beanDefinition);
+			// registerPostProcessor => this.beanDefinitionMap.put(beanName, beanDefinition);
 			beanDefs.add(registerPostProcessor(registry, def, CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME));
 		}
 
