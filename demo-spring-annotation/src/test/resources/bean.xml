@@ -5,9 +5,12 @@
 	   xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/cache"
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
 
+	<!-- 注入配置文件 -->
+	<context:property-placeholder location="db.properties"/>
+
 	<!-- 注册bean -->
 	<bean id="person" class="com.io.bean.bean.Person" scope="prototype" init-method="getAge" destroy-method="getAge">
-		<property name="name" value="guo"/>
+		<property name="name" value="${db.name}"/>
 		<property name="age" value="12"/>
 	</bean>
 

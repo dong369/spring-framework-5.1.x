@@ -9,6 +9,8 @@ import org.springframework.context.ApplicationEvent;
  * @version 1.0 use jdk 1.8
  */
 public class MyApplicationEvent extends ApplicationEvent {
+
+	private static final long serialVersionUID = -213229384189934813L;
 	private String msg;
 
 	/**
