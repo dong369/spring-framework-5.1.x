@@ -127,7 +127,7 @@ public abstract class AnnotationConfigUtils {
 		ClassLoader classLoader = AnnotationConfigUtils.class.getClassLoader();
 		jsr250Present = ClassUtils.isPresent("javax.annotation.Resource", classLoader);
 		jpaPresent = ClassUtils.isPresent("javax.persistence.EntityManagerFactory", classLoader) &&
-					 ClassUtils.isPresent(PERSISTENCE_ANNOTATION_PROCESSOR_CLASS_NAME, classLoader);
+				ClassUtils.isPresent(PERSISTENCE_ANNOTATION_PROCESSOR_CLASS_NAME, classLoader);
 	}
 
 

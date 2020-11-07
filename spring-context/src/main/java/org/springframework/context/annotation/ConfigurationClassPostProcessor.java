@@ -319,6 +319,8 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 			// 通过其他注解(例如@Import、@Bean)的方式，在parse()方法这一步并不会将其解析为BeanDefinition放入到BeanDefinitionMap中，而是先解析成ConfigurationClass类
 			// 真正放入到map中是在下面的this.reader.loadBeanDefinitions()方法中实现的
 			parser.parse(candidates);
+
+
 			parser.validate();
 
 			Set<ConfigurationClass> configClasses = new LinkedHashSet<>(parser.getConfigurationClasses());

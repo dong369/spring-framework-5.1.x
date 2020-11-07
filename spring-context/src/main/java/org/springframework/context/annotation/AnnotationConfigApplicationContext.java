@@ -65,8 +65,9 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	public AnnotationConfigApplicationContext() {
 		// 此处会先调用父类的构造器，即先执行super()：this.beanFactory = new DefaultListableBeanFactory();
 		// 创建BeanDefinition读取器：spring内部BeanDefinition的注册（主要是后置处理器），完成开天辟地的基础五个bean（主要是后置处理器）
+		// BeanDefinition放入到到BeanDefinitionMap中
 		this.reader = new AnnotatedBeanDefinitionReader(this);
-		// 创建BeanDefinition扫描器，该扫描器在后面并没有用到
+		// 初始化扫描器，创建BeanDefinition扫描器，该扫描器在后面并没有用到
 		this.scanner = new ClassPathBeanDefinitionScanner(this);
 	}
 
