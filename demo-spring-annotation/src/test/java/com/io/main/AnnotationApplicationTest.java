@@ -26,8 +26,8 @@ import org.springframework.core.env.Environment;
  * Spring理念：实现解耦。
  * Spring核心：DI、IOC、AOP、MVC。
  * [Java 对象]是普通new的对象，[Spring Bean]是经过spring的生命周期的spring bean，Bean一定是Java对象，但是Java对象不一定是Bean。
- * [实例化]是对象到bean的整个过程；[初始化]是对象new出来后做的事情
- * IOC、AOP、循环依赖(自动注入)、BeanPostProcessor后置处理器、Aware回调
+ * [实例化]是对象到bean的整个过程；[初始化]是对象new出来后做的事情。
+ * IOC、AOP、循环依赖(自动注入)、BeanPostProcessor后置处理器、Aware回调。
  * spring容器：是spring容器组件的组合，并不是我们理解的单例池，
  * （ApplicationContext、BeanDefinition、BeanFactoryPostProcessor、BeanFactory、beanDefinitionMap、三个缓存对象、后置处理器）
  * 一般使用ApplicationContext，其不但包含了BeanFactory的作用，同时还进行更多的扩展。
@@ -43,7 +43,7 @@ import org.springframework.core.env.Environment;
  */
 public class AnnotationApplicationTest {
 	/**
-	 * 01、给容器中注册组件：包扫描+组件标注注解(@Bean+包扫描+包含/排除规则)
+	 * 01、给容器中注册组件：包扫描+组件标注注解(包扫描+@Bean+包含/排除规则)
 	 * spring中bean的实例化过程，创建java文件=>编译成class字节码=>BeanDefinition=>put map=>自定义BeanFactoryPostProcessor=>preInstantiateSingleton
 	 * Bean自身的方法：配置文件中的init-method和destroy-method配置的方法、Bean对象自己调用的方法
 	 * Bean级接口方法：BeanNameAware、BeanFactoryAware、InitializingBean、DisposableBean等接口中的方法

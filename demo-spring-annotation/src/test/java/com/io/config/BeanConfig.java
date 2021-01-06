@@ -13,7 +13,8 @@ import org.springframework.context.annotation.FilterType;
  * @since JDK1.8
  */
 @Configuration   // 告诉spring这是一个配置类，配置类==bean.xml配置文件
-@ComponentScan(value = {"com.io.bean.mvc"},  // 配置包扫描，spring boot默认扫描@SpringBootApplication主类的同级包和子包。
+@ComponentScan(
+		value = {"com.io.bean.mvc"},  // 配置包扫描，spring boot默认扫描@SpringBootApplication主类的同级包和子包。
 		useDefaultFilters = false,
 		// 排除指定类
 		// excludeFilters = {@ComponentScan.Filter(type = FilterType.ANNOTATION, classes = {Controller.class})},

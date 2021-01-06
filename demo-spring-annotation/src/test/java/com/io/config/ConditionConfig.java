@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Configuration;
  * @since JDK1.8
  */
 @Configuration
+// @Conditional(Windows.class) 可以进行全局配置
 public class ConditionConfig {
 	@Bean("bill")
 	@Conditional(Windows.class)
