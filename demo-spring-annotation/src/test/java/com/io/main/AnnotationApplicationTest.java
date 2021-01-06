@@ -26,7 +26,7 @@ import org.springframework.core.env.Environment;
  * Spring理念：实现解耦。
  * Spring核心：DI、IOC、AOP、MVC。
  * [Java 对象]是普通new的对象，[Spring Bean]是经过spring的生命周期的spring bean，Bean一定是Java对象，但是Java对象不一定是Bean。
- * [实例化]是对象到bean的整个过程；[初始化]是对象new出来后做的事情。
+ * [初始化]是对象new出来后做的事情；[实例化]是对象到bean的整个过程。
  * IOC、AOP、循环依赖(自动注入)、BeanPostProcessor后置处理器、Aware回调。
  * spring容器：是spring容器组件的组合，并不是我们理解的单例池，
  * （ApplicationContext、BeanDefinition、BeanFactoryPostProcessor、BeanFactory、beanDefinitionMap、三个缓存对象、后置处理器）
