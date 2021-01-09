@@ -437,7 +437,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	ApplicationEventMulticaster getApplicationEventMulticaster() throws IllegalStateException {
 		if (this.applicationEventMulticaster == null) {
 			throw new IllegalStateException("ApplicationEventMulticaster not initialized - " +
-											"call 'refresh' before multicasting events via the context: " + this);
+					"call 'refresh' before multicasting events via the context: " + this);
 		}
 		return this.applicationEventMulticaster;
 	}
@@ -451,7 +451,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	LifecycleProcessor getLifecycleProcessor() throws IllegalStateException {
 		if (this.lifecycleProcessor == null) {
 			throw new IllegalStateException("LifecycleProcessor not initialized - " +
-											"call 'refresh' before invoking lifecycle methods via the context: " + this);
+					"call 'refresh' before invoking lifecycle methods via the context: " + this);
 		}
 		return this.lifecycleProcessor;
 	}
@@ -615,7 +615,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			} catch (BeansException ex) {
 				if (logger.isWarnEnabled()) {
 					logger.warn("Exception encountered during context initialization - " +
-								"cancelling refresh attempt: " + ex);
+							"cancelling refresh attempt: " + ex);
 				}
 
 				// Destroy already created singletons to avoid dangling resources.
@@ -772,10 +772,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 */
 	protected void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
 		// 完成扫描
-		// PostProcessor类型接口常用类分为两种：
-		// 一种是BeanFactoryPostProcessor，关于对象工厂BeanFactory创建完毕的回调处理；另一种是BeanPostProcessor关于通过对象工厂BeanFactory创建对象前后的回调处理
-		// BeanFactoryPostProcessor分两类：
-		// 一类直接实现BeanFactoryPostProcessor#postProcessBeanDefinitionRegistry；另一类是BeanDefinitionRegistryPostProcessor#postProcessBeanFactory
+		// PostProcessor类型接口常用类分为两种：一种是BeanFactoryPostProcessor，关于对象工厂BeanFactory[创建完毕]的回调处理；
+		// 另一种是BeanPostProcessor关于通过对象工厂BeanFactory[创建对象前后]的回调处理
+		// BeanFactoryPostProcessor分两类：一类直接实现BeanFactoryPostProcessor#postProcessBeanDefinitionRegistry；
+		// 另一类是BeanDefinitionRegistryPostProcessor#postProcessBeanFactory
 		PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(beanFactory, getBeanFactoryPostProcessors());
 
 		// Detect a LoadTimeWeaver and prepare for weaving, if found in the meantime
@@ -850,7 +850,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			beanFactory.registerSingleton(APPLICATION_EVENT_MULTICASTER_BEAN_NAME, this.applicationEventMulticaster);
 			if (logger.isTraceEnabled()) {
 				logger.trace("No '" + APPLICATION_EVENT_MULTICASTER_BEAN_NAME + "' bean, using " +
-							 "[" + this.applicationEventMulticaster.getClass().getSimpleName() + "]");
+						"[" + this.applicationEventMulticaster.getClass().getSimpleName() + "]");
 			}
 		}
 	}
@@ -876,7 +876,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			beanFactory.registerSingleton(LIFECYCLE_PROCESSOR_BEAN_NAME, this.lifecycleProcessor);
 			if (logger.isTraceEnabled()) {
 				logger.trace("No '" + LIFECYCLE_PROCESSOR_BEAN_NAME + "' bean, using " +
-							 "[" + this.lifecycleProcessor.getClass().getSimpleName() + "]");
+						"[" + this.lifecycleProcessor.getClass().getSimpleName() + "]");
 			}
 		}
 	}
@@ -928,7 +928,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		// Initialize conversion service for this context.
 		// 初始化转换服务
 		if (beanFactory.containsBean(CONVERSION_SERVICE_BEAN_NAME) &&
-			beanFactory.isTypeMatch(CONVERSION_SERVICE_BEAN_NAME, ConversionService.class)) {
+				beanFactory.isTypeMatch(CONVERSION_SERVICE_BEAN_NAME, ConversionService.class)) {
 			beanFactory.setConversionService(
 					beanFactory.getBean(CONVERSION_SERVICE_BEAN_NAME, ConversionService.class));
 		}
@@ -1401,7 +1401,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	private MessageSource getMessageSource() throws IllegalStateException {
 		if (this.messageSource == null) {
 			throw new IllegalStateException("MessageSource not initialized - " +
-											"call 'refresh' before accessing messages via the context: " + this);
+					"call 'refresh' before accessing messages via the context: " + this);
 		}
 		return this.messageSource;
 	}

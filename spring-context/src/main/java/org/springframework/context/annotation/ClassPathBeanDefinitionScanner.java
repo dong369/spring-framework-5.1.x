@@ -156,8 +156,7 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 	 * @param resourceLoader    the {@link ResourceLoader} to use
 	 * @since 4.3.6
 	 */
-	public ClassPathBeanDefinitionScanner(BeanDefinitionRegistry registry, boolean useDefaultFilters,
-										  Environment environment, @Nullable ResourceLoader resourceLoader) {
+	public ClassPathBeanDefinitionScanner(BeanDefinitionRegistry registry, boolean useDefaultFilters, Environment environment, @Nullable ResourceLoader resourceLoader) {
 
 		Assert.notNull(registry, "BeanDefinitionRegistry must not be null");
 		this.registry = registry;
@@ -354,8 +353,8 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 			return false;
 		}
 		throw new ConflictingBeanDefinitionException("Annotation-specified bean name '" + beanName +
-													 "' for bean class [" + beanDefinition.getBeanClassName() + "] conflicts with existing, " +
-													 "non-compatible bean definition of same name and class [" + existingDef.getBeanClassName() + "]");
+				"' for bean class [" + beanDefinition.getBeanClassName() + "] conflicts with existing, " +
+				"non-compatible bean definition of same name and class [" + existingDef.getBeanClassName() + "]");
 	}
 
 	/**

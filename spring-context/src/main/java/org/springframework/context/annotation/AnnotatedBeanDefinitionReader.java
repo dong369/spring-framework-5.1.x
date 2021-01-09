@@ -87,7 +87,7 @@ public class AnnotatedBeanDefinitionReader {
 		Assert.notNull(environment, "Environment must not be null");
 		this.registry = registry;
 		this.conditionEvaluator = new ConditionEvaluator(registry, environment, null);
-		// 向BeanDefinitionMap中添加了7个类
+		// 向BeanDefinitionMap中添加了7个类，包括配置类、注入规范类
 		AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry);
 	}
 
@@ -241,9 +241,7 @@ public class AnnotatedBeanDefinitionReader {
 				// 如果配置了@Primary注解，作为首选
 				if (Primary.class == qualifier) {
 					abd.setPrimary(true);
-				}
-				// 懒加载
-				else if (Lazy.class == qualifier) {
+				} else if (Lazy.class == qualifier) { // 懒加载
 					abd.setLazyInit(true);
 				} else {
 					abd.addQualifier(new AutowireCandidateQualifier(qualifier));

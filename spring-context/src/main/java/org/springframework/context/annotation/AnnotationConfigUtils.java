@@ -150,7 +150,7 @@ public abstract class AnnotationConfigUtils {
 	 * that have actually been registered by this call
 	 */
 	public static Set<BeanDefinitionHolder> registerAnnotationConfigProcessors(BeanDefinitionRegistry registry, @Nullable Object source) {
-
+		// 返回工厂对象
 		DefaultListableBeanFactory beanFactory = unwrapDefaultListableBeanFactory(registry);
 		if (beanFactory != null) {
 			if (!(beanFactory.getDependencyComparator() instanceof AnnotationAwareOrderComparator)) {
@@ -163,7 +163,7 @@ public abstract class AnnotationConfigUtils {
 
 		Set<BeanDefinitionHolder> beanDefs = new LinkedHashSet<>(8);
 
-		// ※※注册ConfigurationClassPostProcessor,这个类超级重要，它完成了对加了Configuration注解类的解析，@ComponentScan、@Import的解析。
+		// ※※注册ConfigurationClassPostProcessor，这个类超级重要，它完成了对加了@Configuration注解类的解析，@ComponentScan、@Import的解析。
 		if (!registry.containsBeanDefinition(CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME)) {
 			RootBeanDefinition def = new RootBeanDefinition(ConfigurationClassPostProcessor.class);
 			def.setSource(source);

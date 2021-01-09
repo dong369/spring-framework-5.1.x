@@ -234,8 +234,8 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		this.factoriesPostProcessed.add(factoryId);
 		// 下面的if语句不会进入，因为在执行BeanFactoryPostProcessor时，会先执行BeanDefinitionRegistryPostProcessor的postProcessorBeanDefinitionRegistry()方法
 		// 而在执行postProcessorBeanDefinitionRegistry方法时，都会调用processConfigBeanDefinitions方法，这与postProcessorBeanFactory()方法的执行逻辑是一样的
-		// postProcessorBeanFactory()方法也会调用processConfigBeanDefinitions方法，为了避免重复执行，所以在执行方法之前会先生成一个id，将id放入到一个set当中，每次执行之前
-		// 先判断id是否存在，所以在此处，永远不会进入到if语句中
+		// postProcessorBeanFactory()方法也会调用processConfigBeanDefinitions方法
+		// 为了避免重复执行，所以在执行方法之前会先生成一个id，将id放入到一个set当中，每次执行之前，先判断id是否存在，所以在此处，永远不会进入到if语句中
 		if (!this.registriesPostProcessed.contains(factoryId)) {
 			// BeanDefinitionRegistryPostProcessor hook apparently not supported...
 			// Simply call processConfigurationClasses lazily at this point then.
@@ -259,7 +259,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		for (String beanName : candidateNames) {
 			BeanDefinition beanDef = registry.getBeanDefinition(beanName);
 			if (ConfigurationClassUtils.isFullConfigurationClass(beanDef) ||
-				ConfigurationClassUtils.isLiteConfigurationClass(beanDef)) {
+					ConfigurationClassUtils.isLiteConfigurationClass(beanDef)) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Bean definition has already been processed as a configuration class: " + beanDef);
 				}
@@ -359,7 +359,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 						BeanDefinition bd = registry.getBeanDefinition(candidateName);
 						// 该方法是用来判断一个是否是一个配置类
 						if (ConfigurationClassUtils.checkConfigurationClassCandidate(bd, this.metadataReaderFactory) &&
-							!alreadyParsedClasses.contains(bd.getBeanClassName())) {
+								!alreadyParsedClasses.contains(bd.getBeanClassName())) {
 							candidates.add(new BeanDefinitionHolder(bd, candidateName));
 						}
 					}
@@ -395,12 +395,12 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 			if (ConfigurationClassUtils.isFullConfigurationClass(beanDef)) {
 				if (!(beanDef instanceof AbstractBeanDefinition)) {
 					throw new BeanDefinitionStoreException("Cannot enhance @Configuration bean definition '" +
-														   beanName + "' since it is not stored in an AbstractBeanDefinition subclass");
+							beanName + "' since it is not stored in an AbstractBeanDefinition subclass");
 				} else if (logger.isInfoEnabled() && beanFactory.containsSingleton(beanName)) {
 					logger.info("Cannot enhance @Configuration bean definition '" + beanName +
-								"' since its singleton instance has been created too early. The typical cause " +
-								"is a non-static @Bean method with a BeanDefinitionRegistryPostProcessor " +
-								"return type: Consider declaring such methods as 'static'.");
+							"' since its singleton instance has been created too early. The typical cause " +
+							"is a non-static @Bean method with a BeanDefinitionRegistryPostProcessor " +
+							"return type: Consider declaring such methods as 'static'.");
 				}
 				configBeanDefs.put(beanName, (AbstractBeanDefinition) beanDef);
 			}
@@ -424,7 +424,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 					if (configClass != enhancedClass) {
 						if (logger.isTraceEnabled()) {
 							logger.trace(String.format("Replacing bean definition '%s' existing class '%s' with " +
-													   "enhanced class '%s'", entry.getKey(), configClass.getName(), enhancedClass.getName()));
+									"enhanced class '%s'", entry.getKey(), configClass.getName(), enhancedClass.getName()));
 						}
 						beanDef.setBeanClass(enhancedClass);
 					}
