@@ -34,6 +34,7 @@ public class XmlApplicationTest {
 	@Test
 	public void typeTwo() {
 		ApplicationContext context = new ClassPathXmlApplicationContext("bean.xml");
-		System.out.println(context);
+		Person bean = context.getBean(Person.class);
+		System.out.println(bean.getName());
 	}
 }
